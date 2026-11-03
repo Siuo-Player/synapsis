@@ -1,10 +1,11 @@
-# 🌌 Synapsis 3.1 • Grafo Pedagógico de Inteligência Artificial & Machine Learning
+# 🌌 Synapsis 3.1.1 • Grafo Pedagógico de Inteligência Artificial & Machine Learning
 
 [![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-Live%20Demo-brightgreen?logo=github)](https://siuo-player.github.io/synapsis/)
+[![CI](https://github.com/Siuo-Player/synapsis/actions/workflows/validate.yml/badge.svg)](https://github.com/Siuo-Player/synapsis/actions)
 [![AI Ready](https://img.shields.io/badge/AI%20Standard-llms.txt-blue?logo=openai)](https://siuo-player.github.io/synapsis/llms.txt)
 [![JSON Schema](https://img.shields.io/badge/Schema-Draft--07%20Validated-orange?logo=json)](https://siuo-player.github.io/synapsis/synapsis_schema.json)
 [![Graph Nodes](https://img.shields.io/badge/Knowledge%20Nodes-60%20Concepts%20(AI%20%26%20ML)-purple)](#)
-[![Integrity Test](https://img.shields.io/badge/Test%20Suite-11%2F11%20Passed%20100%25-success)](#)
+[![Integrity Test](https://img.shields.io/badge/Test%20Suite-13%2F13%20Passed%20100%25-success)](#)
 [![License](https://img.shields.io/badge/License-MIT-gray)](./LICENSE)
 
 > **Plataforma Pedagógica Interativa de Estudo, Visualização de Grafos Acíclicos Dirigidos (DAG) e Ontologia para Modelos de Linguagem em Inteligência Artificial.**  
@@ -16,11 +17,11 @@
 
 O **Synapsis** estrutura os conhecimentos de Inteligência Artificial e Aprendizagem Computacional como uma **rede navegável de pré-requisitos formativos**: cada conceito de Machine Learning ou Deep Learning apoia-se em fundamentos matemáticos e algoritmos que devem ser compreendidos previamente.
 
-- **🪐 Modo Órbita (Inspiração Visual Axiom Celestial):** Visualização radial em 6 anéis concêntricos (Níveis 0 a 5) calculados estritamente pela profundidade topológica do DAG.
+- **🪐 Modo Órbita Radial:** Visualização em 6 anéis concêntricos (Níveis 0 a 5) calculados estritamente pela profundidade topológica do DAG. O layout visual cósmico é inspirado esteticamente na disposição radial do projeto Axiom; a ontologia conceptual, taxonomia de IA e relações pedagógicas de dependência são originais e exclusivas do Synapsis.
 - **📦 Modo Caixas:** Hierarquia topológica em fluxo ortogonal da esquerda para a direita.
 - **🕸️ Modo Orgânico:** Exploração dinâmica com forças gravitacionais e molas de atração.
 - **⚡ 7 Simuladores Matemáticos Dedicados:**
-  1. *Entropia de Shannon, Ganho de Informação (ID3), Gain Ratio (C4.5) e Redução de Gini (CART)* (com garantia analítica de conservação de probabilidade: $w_L p_L + (1-w_L) p_R = p$).
+  1. *Entropia de Shannon, Ganho de Informação (ID3), Gain Ratio (C4.5) e Redução de Gini (CART)* (com cálculo analítico rigoroso via módulo `simulator_math.js`, garantia de conservação $w_L p_L + (1-w_L) p_R = p$ e zero resultados `NaN` em partições puras).
   2. *Métricas de Distância em Espaços Normados $L_p$* (Manhattan $L_1$, Euclidiana $L_2$, Chebyshev $L_\infty$).
   3. *Matriz de Confusão & Métricas Diagnósticas* (Precision, Recall, Specificity, F1-Score, Balanced Accuracy).
   4. *Funções de Ativação Neurais & Vanishing Gradient* (Sigmóide, ReLU, LeakyReLU, Tanh e derivadas analíticas).
@@ -43,6 +44,7 @@ O **Synapsis** estrutura os conhecimentos de Inteligência Artificial e Aprendiz
 - **🤖 Grafo em JSON para IAs:** [`synapsis_graph.json`](https://siuo-player.github.io/synapsis/synapsis_graph.json)
 - **📋 JSON Schema Draft-07:** [`synapsis_schema.json`](https://siuo-player.github.io/synapsis/synapsis_schema.json)
 - **📄 Especificação para LLMs:** [`llms.txt`](https://siuo-player.github.io/synapsis/llms.txt)
+- **⚖️ Avisos de Terceiros e Licenças:** [`THIRD_PARTY_NOTICES.md`](https://siuo-player.github.io/synapsis/THIRD_PARTY_NOTICES.md)
 
 ---
 
@@ -67,18 +69,22 @@ Como todas as bibliotecas (`vis-network`, `KaTeX`) estão embutidas na pasta `li
 2. **Abrir a Aplicação:**
    Basta abrir `index.html` em qualquer navegador moderno.
 
-3. **Executar a Suíte de Testes Automatizada (Python):**
+3. **Executar a Suíte de Qualidade & Integridade Completa (13/13 testes):**
    ```bash
+   pip install jsonschema
    python validate_synapsis.py
    ```
    Valida automaticamente:
    - 0 ciclos (DAG comprovado).
    - 100% de dependências resolvidas (0 links quebrados).
    - Conformidade estrita dos níveis topológicos ($\text{level}(u) < \text{level}(v)$).
-   - Validade e completude da ordenação de Kahn em todas as 60 cadeias ancestrais.
-   - Sincronização estrita entre `concepts.js`, `synapsis_graph.json` e `llms.txt`.
-   - Conformidade estrutural com o Schema JSON Draft-07.
-   - Conservação matemática de probabilidades nos simuladores.
+   - Validade, ausência de duplicados e completude da ordenação de Kahn em todas as 60 cadeias ancestrais.
+   - Presença e tipagem explícita de todos os 15 simuladores.
+   - Sincronização profunda campo a campo entre `concepts.js` e `synapsis_graph.json`.
+   - Completude da documentação em `llms.txt` para todos os 60 conceitos.
+   - Validação formal obrigatória Draft-07 JSON Schema.
+   - Verificação local de todas as 60 fontes KaTeX (`.woff2`, `.woff`, `.ttf`) com verificação de assinaturas binárias (magic bytes).
+   - Execução dos testes unitários JavaScript (`test_simulator_math.js`) com 1.615 configurações testadas com zero erros `NaN`.
 
 ---
 

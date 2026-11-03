@@ -16,9 +16,14 @@
   const EPSILON = 1e-12;
 
   /**
-   * Calculates Shannon binary entropy H(p) in bits.
-   * Handles boundary limits strictly: lim_{p->0} p*log2(p) = 0 and lim_{p->1} (1-p)*log2(1-p) = 0.
-   * Prevents JavaScript 0 * -Infinity = NaN.
+   * Calculates Shannon binary entropy H(p) in bits:
+   * H(p) = - [ p * log2(p) + (1 - p) * log2(1 - p) ]
+   *
+   * Analytical boundary limits:
+   * lim_{p -> 0} p * log2(p) = 0
+   * lim_{p -> 1} (1 - p) * log2(1 - p) = 0
+   *
+   * Prevents JavaScript 0 * -Infinity = NaN on pure nodes (p=0 or p=1).
    *
    * @param {number} p - Probability of positive class, p in [0, 1].
    * @returns {number} Entropy in bits, in range [0, 1].
@@ -27,22 +32,26 @@
     if (!Number.isFinite(p) || p < -EPSILON || p > 1 + EPSILON) {
       throw new RangeError(`Probability must be between 0 and 1. Received: ${p}`);
     }
-    // Clean clamping against floating-point epsilon
-    if (p <= 0 || p >= 1) {
+    // Clean numerical tolerance clamping
+    if (p < 0) p = 0;
+    if (p > 1) p = 1;
+
+    // Exact analytical boundary limits
+    if (p === 0 || p === 1) {
       return 0.0;
     }
-    if (p < EPSILON || p > 1 - EPSILON) {
-      return 0.0;
-    }
+
     const q = 1.0 - p;
-    const termP = p * Math.log2(p);
-    const termQ = q * Math.log2(q);
+    // When p > 0 and q > 0, Math.log2 is strictly finite
+    const termP = (p === 0) ? 0.0 : p * Math.log2(p);
+    const termQ = (q === 0) ? 0.0 : q * Math.log2(q);
     const h = -(termP + termQ);
     return Math.max(0.0, Math.min(1.0, h));
   }
 
   /**
    * Calculates Split Information for binary branch weighting w_L in [0, 1].
+   * SplitInfo(D) = - [ w_L * log2(w_L) + (1 - w_L) * log2(1 - w_L) ]
    *
    * @param {number} wL - Proportion of samples in left branch, |D_L| / |D|.
    * @returns {number} SplitInfo in bits.
@@ -51,10 +60,16 @@
     if (!Number.isFinite(wL) || wL < -EPSILON || wL > 1 + EPSILON) {
       throw new RangeError(`Branch weight must be between 0 and 1. Received: ${wL}`);
     }
-    if (wL <= 0 || wL >= 1 || wL < EPSILON || wL > 1 - EPSILON) {
+    if (wL < 0) wL = 0;
+    if (wL > 1) wL = 1;
+
+    if (wL === 0 || wL === 1) {
       return 0.0;
     }
-    return -(wL * Math.log2(wL) + (1.0 - wL) * Math.log2(1.0 - wL));
+
+    const termL = wL * Math.log2(wL);
+    const termR = (1.0 - wL) * Math.log2(1.0 - wL);
+    return -(termL + termR);
   }
 
   /**
@@ -64,15 +79,28 @@
    *
    * @param {number} p - Parent positive class proportion, p in [0, 1].
    * @param {number} wL - Left branch weight, wL in (0, 1).
+   * @param {boolean} [forSlider=false] - If true, clamps bounds to [0.001, 0.999] for UI sliders.
    * @returns {{min: number, max: number}}
    */
-  function getValidPurityBounds(p, wL) {
-    if (wL <= 0 || wL >= 1) {
-      return { min: 0.0, max: 1.0 };
+  function getValidPurityBounds(p, wL, forSlider = false) {
+    if (!Number.isFinite(p) || p < 0 || p > 1) {
+      throw new RangeError(`Parent probability p must be in [0, 1]. Received: ${p}`);
     }
-    const min = Math.max(0.0, (p - (1.0 - wL)) / wL);
-    const max = Math.min(1.0, p / wL);
-    return { min, max };
+    if (!Number.isFinite(wL) || wL <= 0 || wL >= 1) {
+      throw new RangeError(`Branch weight wL must be in (0, 1). Received: ${wL}`);
+    }
+
+    const rawMin = Math.max(0.0, (p - (1.0 - wL)) / wL);
+    const rawMax = Math.min(1.0, p / wL);
+
+    if (forSlider) {
+      return {
+        min: Math.max(0.001, rawMin),
+        max: Math.min(0.999, rawMax)
+      };
+    }
+
+    return { min: rawMin, max: rawMax };
   }
 
   /**
@@ -81,7 +109,7 @@
    *
    * @param {number} p - Parent node positive class proportion, p in [0, 1].
    * @param {number} wL - Left branch weight, wL in (0, 1).
-   * @param {number} pL - Left branch positive class proportion.
+   * @param {number} pL - Left branch positive class proportion, pL in [0, 1].
    * @returns {object} Split metrics with strictly finite numerical values.
    */
   function calculateEntropySplit(p, wL, pL) {
@@ -91,8 +119,11 @@
     if (!Number.isFinite(wL) || wL <= 0 || wL >= 1) {
       throw new RangeError(`Weight wL must be in (0, 1). Received: ${wL}`);
     }
+    if (!Number.isFinite(pL) || pL < 0 || pL > 1) {
+      throw new RangeError(`Left branch purity pL must be in [0, 1]. Received: ${pL}`);
+    }
 
-    const bounds = getValidPurityBounds(p, wL);
+    const bounds = getValidPurityBounds(p, wL, false);
     let clampedPL = pL;
     if (clampedPL < bounds.min) clampedPL = bounds.min;
     if (clampedPL > bounds.max) clampedPL = bounds.max;
@@ -102,7 +133,7 @@
     if (pR < 0.0) pR = 0.0;
     if (pR > 1.0) pR = 1.0;
 
-    // 1. Shannon Entropies
+    // 1. Shannon Entropies (ID3)
     const hD = binaryEntropy(p);
     const hDL = binaryEntropy(clampedPL);
     const hDR = binaryEntropy(pR);

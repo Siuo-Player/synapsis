@@ -1094,10 +1094,13 @@ function renderEntropyGainSimulator(container, concept) {
     const p = parseFloat(sliderP.value);
     const wL = parseFloat(sliderWl.value);
 
-    // Exact mathematical feasibility interval:
-    // 0 <= pR <= 1  <===>  (p - (1 - wL))/wL <= pL <= p/wL
-    const pLMin = Math.max(0.001, (p - (1 - wL)) / wL);
-    const pLMax = Math.min(0.999, p / wL);
+    // Exact mathematical feasibility interval via SimulatorMath
+    const bounds = (typeof SimulatorMath !== 'undefined')
+      ? SimulatorMath.getValidPurityBounds(p, wL, true)
+      : { min: Math.max(0.001, (p - (1 - wL)) / wL), max: Math.min(0.999, p / wL) };
+
+    const pLMin = bounds.min;
+    const pLMax = bounds.max;
 
     sliderPl.min = pLMin.toFixed(3);
     sliderPl.max = pLMax.toFixed(3);

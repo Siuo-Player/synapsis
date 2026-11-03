@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """
 validate_synapsis.py
-Automated Quality, Integrity and Mathematical Consistency Test Suite for Synapsis 3.1.
-Validated for Artificial Intelligence and Machine Learning curriculum.
+Automated Quality, Integrity and Mathematical Consistency Test Suite for Synapsis 3.1.1.
+Target Scope: Artificial Intelligence & Machine Learning Curriculum.
 """
 import json
 import re
@@ -15,7 +15,7 @@ sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 
 def run_tests():
     print("==================================================")
-    print("Synapsis 3.1 Automated Quality & Integrity Suite")
+    print("Synapsis 3.1.1 Automated Quality & Integrity Suite")
     print("Target Scope: Artificial Intelligence & Machine Learning")
     print("==================================================")
     
@@ -79,7 +79,7 @@ def run_tests():
     assert len(level_violations) == 0, f"Topological level violations detected: {level_violations}"
     print("✓ Test 4 Passed: Strict topological depth verified. level(u) < level(v) for all edges.")
     
-    # Test 5: Kahn's Topological Sort Completeness & Order
+    # Test 5: Kahn's Topological Sort Completeness, Order & Zero Duplicates
     def get_all_ancestors(target_id):
         seen = set()
         stack = [target_id]
@@ -96,6 +96,9 @@ def run_tests():
         assert chain, f"Concept {c['id']} missing ancestral_chain"
         assert chain[-1] == c['id'], f"Concept {c['id']} ancestral chain must end with itself"
         
+        # Verify no duplicate entries in ancestral chain
+        assert len(chain) == len(set(chain)), f"Duplicate entries in ancestral chain for {c['id']}: {chain}"
+        
         # Verify all transitive ancestors are included
         expected_ancestors = get_all_ancestors(c['id'])
         assert set(chain[:-1]) == expected_ancestors, f"Incomplete ancestral chain for {c['id']}"
@@ -107,7 +110,7 @@ def run_tests():
                 if dep in set(chain):
                     assert dep in seen, f"Kahn topological violation in {c['id']}: {dep} must appear before {node}"
             seen.add(node)
-    print("✓ Test 5 Passed: All 60 ancestral chains strictly adhere to Kahn's topological sorting with 100% ancestor completeness.")
+    print("✓ Test 5 Passed: All 60 ancestral chains strictly adhere to Kahn's topological sorting with 100% ancestor completeness and 0 duplicates.")
     
     # Test 6: Valid Core Domains (academic_ml, foundations, masters_ai)
     valid_domains = {'academic_ml', 'foundations', 'masters_ai'}
@@ -116,9 +119,9 @@ def run_tests():
         assert dom in valid_domains, f"Invalid domain {dom} for concept {c['id']}"
         for d in c.get('domains', []):
             assert d in valid_domains, f"Invalid secondary domain {d} in {c['id']}"
-    print("✓ Test 6 Passed: All concept domains adhere to the 3 AI taxonomies (no external CFSG).")
+    print("✓ Test 6 Passed: All concept domains adhere to the 3 AI taxonomies (foundations, academic_ml, masters_ai).")
     
-    # Test 7: Simulators Explicit Typing & Feasibility
+    # Test 7: Simulators Explicit Typing, Feasibility & Exact Count Verification
     valid_sim_types = {'entropy_gain', 'knn_spatial', 'confusion_matrix', 'neural_activations', 'bayesian_inference', 'gradient_descent', 'svm_margin'}
     sim_count = 0
     for c in concepts:
@@ -126,7 +129,8 @@ def run_tests():
         if sim:
             sim_count += 1
             assert sim.get('type') in valid_sim_types, f"Unknown simulator type {sim.get('type')} in {c['id']}"
-    print(f"✓ Test 7 Passed: All {sim_count} interactive simulators are explicitly typed and validated.")
+    assert sim_count == 15, f"Expected exactly 15 interactive simulators, found {sim_count}"
+    print(f"✓ Test 7 Passed: Exactly {sim_count} interactive simulators are explicitly typed, configured, and validated.")
     
     # Test 8: Exhaustive Mathematical Feasibility of Entropy Simulator Bounds
     grid_points = 0
@@ -145,25 +149,33 @@ def run_tests():
                 grid_points += 1
     print(f"✓ Test 8 Passed: Entropy conservation equation w_L*p_L + (1-w_L)*p_R = p verified across {grid_points} grid parameter configurations.")
 
-    # Test 9: synapsis_graph.json Deep Synchronicity
+    # Test 9: synapsis_graph.json Deep Field-by-Field & Key-by-Key Synchronicity
     graph_path = os.path.join(base_dir, 'synapsis_graph.json')
     with open(graph_path, 'r', encoding='utf-8') as f:
         graph = json.load(f)
     assert graph.get('schema_version') == '3.1.0', f"Unexpected schema version: {graph.get('schema_version')}"
     assert len(graph.get('concepts', [])) == len(concepts), "Concept count mismatch in graph json"
+    assert graph.get('concepts_count') == len(concepts), f"concepts_count mismatch in header: {graph.get('concepts_count')}"
+    assert graph.get('edges_count') == total_edges, f"edges_count mismatch in header: {graph.get('edges_count')} vs {total_edges}"
     assert graph.get('relation_semantics') == 'pedagogical_prerequisite', "Incorrect relation semantics"
+    assert graph.get('edge_direction') == 'prerequisite_to_dependent', "Incorrect edge direction"
     assert graph.get('causal_claim') is False, "causal_claim must be false"
     
-    # Verify every single concept field matches exactly between concepts.js and synapsis_graph.json
+    # Comprehensive key-by-key comparison of every single concept object
+    concept_fields = [
+        'id', 'label', 'domain', 'domains', 'category', 'course_module',
+        'level', 'summary', 'definition', 'formula', 'code', 'code_language',
+        'code_status', 'references', 'dependencies', 'ancestral_chain', 'simulator'
+    ]
     graph_map = {gc['id']: gc for gc in graph['concepts']}
-    for c in concepts:
-        cid = c['id']
-        assert cid in graph_map, f"Missing {cid} in synapsis_graph.json"
+    assert set(concept_map.keys()) == set(graph_map.keys()), "Mismatch in concept ID sets"
+    for cid, c in concept_map.items():
         gc = graph_map[cid]
-        for field in ['label', 'domain', 'level', 'summary', 'definition', 'dependencies', 'ancestral_chain']:
-            assert c.get(field) == gc.get(field), f"Field mismatch in {cid} for field {field}"
+        for field in concept_fields:
+            assert c.get(field) == gc.get(field), f"Field mismatch in '{cid}' for field '{field}'"
     
     # Verify adjacency mappings
+    assert 'graph_representation' in graph, "Missing graph_representation in synapsis_graph.json"
     prereqs = graph['graph_representation']['prerequisites_by_concept']
     dependents = graph['graph_representation']['dependents_by_prerequisite']
     for c in concepts:
@@ -171,7 +183,7 @@ def run_tests():
         assert prereqs.get(cid) == c.get('dependencies', []), f"Adjacency mismatch for {cid}"
         for dep in c.get('dependencies', []):
             assert cid in dependents.get(dep, []), f"Reverse adjacency missing {cid} in {dep}"
-    print("✓ Test 9 Passed: synapsis_graph.json has 100% deep field-by-field synchronicity with concepts.js (Schema 3.1.0).")
+    print(f"✓ Test 9 Passed: synapsis_graph.json has 100% deep key-by-key synchronicity with concepts.js (all {len(concept_fields)} fields, counts, and dual adjacency maps).")
     
     # Test 10: llms.txt Deep Completeness
     llms_path = os.path.join(base_dir, 'llms.txt')
@@ -181,27 +193,54 @@ def run_tests():
         assert f"### `{c['id']}`:" in llms_text, f"Missing documentation block for {c['id']} in llms.txt"
         assert c['label'] in llms_text, f"Missing label for {c['id']} in llms.txt"
         assert f"Level {c['level']}" in llms_text, f"Missing level for {c['id']} in llms.txt"
-    print("✓ Test 10 Passed: llms.txt contains complete documentation and metadata for all 60 AI concepts.")
+        # Verify first sentence of summary is present in documentation
+        first_clause = c['summary'].split('.')[0].strip()
+        assert first_clause in llms_text, f"Missing core summary excerpt for '{c['id']}' in llms.txt"
+    print("✓ Test 10 Passed: llms.txt contains complete documentation, metadata, and summaries for all 60 AI concepts.")
     
-    # Test 11: Formal Draft-07 JSON Schema Validation
+    # Test 11: Mandatory Formal Draft-07 JSON Schema Validation
     try:
         import jsonschema
-        schema_path = os.path.join(base_dir, 'synapsis_schema.json')
-        with open(schema_path, 'r', encoding='utf-8') as f:
-            schema = json.load(f)
-        jsonschema.validate(instance=graph, schema=schema)
-        print("✓ Test 11 Passed: synapsis_graph.json strictly passes Draft-07 JSON Schema validation.")
     except ImportError:
-        print("ℹ Test 11 Skipped: jsonschema package not installed (manual schema keys checked).")
+        raise AssertionError("jsonschema package is strictly required for Test 11. Run: pip install jsonschema")
+        
+    schema_path = os.path.join(base_dir, 'synapsis_schema.json')
+    with open(schema_path, 'r', encoding='utf-8') as f:
+        schema = json.load(f)
+    try:
+        jsonschema.validate(instance=graph, schema=schema)
+        print("✓ Test 11 Passed: synapsis_graph.json strictly passes Draft-07 JSON Schema validation (all required properties enforced).")
     except Exception as e:
         raise AssertionError(f"JSON Schema validation failed: {e}")
 
-    # Test 12: Offline KaTeX Fonts Verification
-    fonts_dir = os.path.join(base_dir, 'libs', 'fonts')
-    assert os.path.exists(fonts_dir), "libs/fonts directory missing"
-    font_files = [f for f in os.listdir(fonts_dir) if f.endswith(('.woff2', '.woff', '.ttf'))]
-    assert len(font_files) >= 20, f"Expected KaTeX fonts offline, found only {len(font_files)}"
-    print(f"✓ Test 12 Passed: KaTeX math typesetting fonts fully verified offline ({len(font_files)} font files in libs/fonts).")
+    # Test 12: Exhaustive KaTeX Fonts Verification (Existence, Paths, Non-empty & Binary Signatures)
+    css_path = os.path.join(base_dir, 'libs', 'katex.min.css')
+    assert os.path.exists(css_path), "libs/katex.min.css missing"
+    with open(css_path, 'r', encoding='utf-8') as f:
+        css_text = f.read()
+    
+    font_refs = set(re.findall(r'url\(([^)]+)\)', css_text))
+    assert len(font_refs) == 60, f"Expected 60 font references in katex.min.css, found {len(font_refs)}"
+    
+    FONT_SIGNATURES = {
+        '.woff2': b'wOF2',
+        '.woff': b'wOFF',
+        '.ttf': b'\x00\x01\x00\x00',
+    }
+    
+    for ref in font_refs:
+        clean_ref = ref.strip('\'"')
+        assert not clean_ref.startswith('http') and not clean_ref.startswith('//'), f"Font reference {clean_ref} is not local!"
+        font_path = os.path.normpath(os.path.join(os.path.dirname(css_path), clean_ref))
+        assert os.path.isfile(font_path), f"Missing referenced font file: {font_path}"
+        size = os.path.getsize(font_path)
+        assert size > 0, f"Font file {font_path} is empty (0 bytes)"
+        ext = os.path.splitext(font_path)[1].lower()
+        if ext in FONT_SIGNATURES:
+            with open(font_path, 'rb') as ff:
+                header = ff.read(4)
+                assert header == FONT_SIGNATURES[ext], f"Invalid binary signature for {font_path}: expected {FONT_SIGNATURES[ext]}, got {header}"
+    print(f"✓ Test 12 Passed: All 60 KaTeX fonts referenced by CSS verified locally with non-empty files and valid binary signatures (.woff2, .woff, .ttf).")
 
     # Test 13: SimulatorMath Module & JavaScript Unit Tests Execution
     test_math_path = os.path.join(base_dir, 'test_simulator_math.js')

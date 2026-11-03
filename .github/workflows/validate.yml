@@ -19,10 +19,11 @@ jobs:
       with:
         python-version: '3.11'
 
-    - name: Install Python dependencies
+    - name: Install Python dependencies & Playwright Chromium
       run: |
         python -m pip install --upgrade pip
-        pip install jsonschema
+        pip install jsonschema playwright
+        python -m playwright install --with-deps chromium
 
     - name: Set up Node.js 20
       uses: actions/setup-node@v4
@@ -32,3 +33,7 @@ jobs:
     - name: Run Synapsis 13-Suite Automated Test Suite
       run: |
         python validate_synapsis.py
+
+    - name: Run Playwright Browser UI & DOM Integration Tests
+      run: |
+        python test_browser_ui.py
