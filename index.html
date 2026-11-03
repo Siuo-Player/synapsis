@@ -47,7 +47,8 @@
     <!-- Modos de Visualização (Órbita Radial Concêntrica, Caixas, Orgânico) -->
     <div class="view-modes-bar" id="view-modes-bar">
       <button class="view-mode-btn active" data-mode="radial" title="Modo Radial com órbitas circulares e nós concêntricos">🪐 Órbita Radial</button>
-      <button class="view-mode-btn" data-mode="cards" title="Modo Fluxograma com caixas retangulares e níveis">📦 Caixas</button>
+      <button class="view-mode-btn" data-mode="tree" title="Árvore Dedutiva Axiomática (Top-Down): Raízes axiomáticas no topo derivando teoremas e modelos em estratos sucessivos">🌲 Árvore Dedutiva</button>
+      <button class="view-mode-btn" data-mode="cards" title="Modo Fluxograma com caixas retangulares e níveis horizontais">📦 Níveis Horizontais</button>
       <button class="view-mode-btn" data-mode="organic" title="Modo Orgânico com atração gravitacional">🕸️ Orgânico</button>
     </div>
 
@@ -237,6 +238,21 @@
         <button class="close-btn" id="close-legend-btn" aria-label="Fechar legenda">✕</button>
       </div>
       <div class="legend-body">
+        <div class="legend-section" style="background: rgba(59, 130, 246, 0.08); border: 1px solid rgba(59, 130, 246, 0.25); border-radius: 8px; padding: 12px; margin-bottom: 14px;">
+          <h4 style="color: #60a5fa; margin-top: 0; display: flex; align-items: center; gap: 6px;">
+            🌲 Arquitetura em Árvore Dedutiva & Estratificação Epistemológica
+          </h4>
+          <p style="font-size: 12.5px; line-height: 1.5; color: var(--text-primary); margin-bottom: 8px;">
+            O Synapsis organiza o conhecimento sob a forma de uma <strong>Árvore Dedutiva Hierárquica Top-Down</strong>, onde todo o saber descende de <strong>Axiomas Fundamentais</strong> indecomponíveis:
+          </p>
+          <div id="tree-formula-katex" style="padding: 6px 0; text-align: center;"></div>
+          <ul style="font-size: 12px; line-height: 1.6; color: var(--text-secondary); margin: 0; padding-left: 18px;">
+            <li><strong>Raízes Axiomáticas no Topo ($L = 0$):</strong> Fundamentos puros sem pré-requisitos internos (Cálculo, Álgebra Linear, Probabilidade, Otimização, Lógica Indutiva, Complexidade, Teoria dos Grafos).</li>
+            <li><strong>Regra de Elevação Dedutiva:</strong> Toda a conclusão assenta sobre várias premissas e situa-se <em>estritamente um nível acima da premissa mais avançada de que necessita</em> ($\operatorname{nível}(v) = 1 + \max \operatorname{nível}(u)$).</li>
+            <li><strong>Cadeia Crítica Epistemológica:</strong> A altura máxima da árvore ($L_{\max}$) reflete o caminho dedutivo mais longo entre um axioma e a aplicação terminal.</li>
+            <li><strong>Construção Dual:</strong> <em>Bottom-Up</em> (síntese progressiva a partir do já consolidado) e <em>Top-Down</em> (decomposição analítica de técnicas aplicadas até às suas primitivas axiomáticas).</li>
+          </ul>
+        </div>
         <div class="legend-section">
           <h4>📐 Direção das Setas (Semântica Pedagógica)</h4>
           <p><strong>A → B</strong> significa que <strong>A é um pré-requisito formativo de B</strong> (deves compreender o conceito A antes de abordar B). Não implica causalidade estatística nem física.</p>

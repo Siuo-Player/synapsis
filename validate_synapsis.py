@@ -19,9 +19,9 @@ def run_tests():
     print("Target Scope: Artificial Intelligence & Machine Learning")
     print("==================================================")
     
-    base_dir = '.'
-    if os.path.exists('interactive_blueprint/concepts.js'):
-        base_dir = 'interactive_blueprint'
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    if os.path.exists(os.path.join(base_dir, 'interactive_blueprint', 'concepts.js')):
+        base_dir = os.path.join(base_dir, 'interactive_blueprint')
     
     # 1. Load concepts.js
     concepts_path = os.path.join(base_dir, 'concepts.js')
@@ -32,7 +32,7 @@ def run_tests():
     concepts = json.loads(match.group(1))
     
     print(f"✓ Loaded {len(concepts)} concepts from {concepts_path}")
-    assert len(concepts) == 60, f"Expected 60 concepts for AI curriculum, found {len(concepts)}"
+    assert len(concepts) == 64, f"Expected 64 concepts for AI curriculum, found {len(concepts)}"
     
     # Test 1: ID Uniqueness
     ids = [c['id'] for c in concepts]
@@ -110,7 +110,7 @@ def run_tests():
                 if dep in set(chain):
                     assert dep in seen, f"Kahn topological violation in {c['id']}: {dep} must appear before {node}"
             seen.add(node)
-    print("✓ Test 5 Passed: All 60 ancestral chains strictly adhere to Kahn's topological sorting with 100% ancestor completeness and 0 duplicates.")
+    print(f"✓ Test 5 Passed: All {len(concepts)} ancestral chains strictly adhere to Kahn's topological sorting with 100% ancestor completeness and 0 duplicates.")
     
     # Test 6: Valid Core Domains (academic_ml, foundations, masters_ai)
     valid_domains = {'academic_ml', 'foundations', 'masters_ai'}
@@ -129,7 +129,7 @@ def run_tests():
         if sim:
             sim_count += 1
             assert sim.get('type') in valid_sim_types, f"Unknown simulator type {sim.get('type')} in {c['id']}"
-    assert sim_count == 15, f"Expected exactly 15 interactive simulators, found {sim_count}"
+    assert sim_count == 16, f"Expected exactly 16 interactive simulators, found {sim_count}"
     print(f"✓ Test 7 Passed: Exactly {sim_count} interactive simulators are explicitly typed, configured, and validated.")
     
     # Test 8: Exhaustive Mathematical Feasibility of Entropy Simulator Bounds
@@ -196,7 +196,7 @@ def run_tests():
         # Verify first sentence of summary is present in documentation
         first_clause = c['summary'].split('.')[0].strip()
         assert first_clause in llms_text, f"Missing core summary excerpt for '{c['id']}' in llms.txt"
-    print("✓ Test 10 Passed: llms.txt contains complete documentation, metadata, and summaries for all 60 AI concepts.")
+    print(f"✓ Test 10 Passed: llms.txt contains complete documentation, metadata, and summaries for all {len(concepts)} AI concepts.")
     
     # Test 11: Mandatory Formal Draft-07 JSON Schema Validation
     try:

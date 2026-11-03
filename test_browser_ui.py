@@ -74,13 +74,18 @@ def run_browser_tests():
         assert window_objects['hasKatex'], "KaTeX library not loaded in window"
         assert window_objects['hasVis'], "vis-network library not loaded in window"
         assert window_objects['hasSimMath'], "SimulatorMath module not loaded in window"
-        assert window_objects['conceptsCount'] == 60, f"Expected 60 concepts loaded, got {window_objects['conceptsCount']}"
+        assert window_objects['conceptsCount'] == 64, f"Expected 60 concepts loaded, got {window_objects['conceptsCount']}"
         print(f"✓ Step 3: Core runtime globals verified (KaTeX, vis-network, SimulatorMath, {window_objects['conceptsCount']} concepts).")
 
         # 4. Verify visualization modes switching
         btn_radial = page.locator('button.view-mode-btn[data-mode="radial"]')
+        btn_tree = page.locator('button.view-mode-btn[data-mode="tree"]')
         btn_boxes = page.locator('button.view-mode-btn[data-mode="cards"]')
         btn_organic = page.locator('button.view-mode-btn[data-mode="organic"]')
+
+        btn_tree.click()
+        time.sleep(0.3)
+        assert "active" in (btn_tree.get_attribute("class") or "")
 
         btn_boxes.click()
         time.sleep(0.3)

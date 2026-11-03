@@ -321,7 +321,7 @@ function buildNodesData(visualMode) {
       const angle = (indexInGroup / Math.max(1, count)) * 2 * Math.PI + angleOffset;
       x = Math.round(centerX + Math.cos(angle) * radius);
       y = Math.round(centerY + Math.sin(angle) * radius);
-    } else if (visualMode === 'cards') {
+    } else if (visualMode === 'cards' || visualMode === 'tree') {
       shape = 'box';
       size = 20;
     } else {
@@ -340,7 +340,7 @@ function buildNodesData(visualMode) {
       size: size,
       x: x,
       y: y,
-      margin: visualMode === 'cards' ? 10 : 8,
+      margin: (visualMode === 'cards' || visualMode === 'tree') ? 10 : 8,
       color: {
         background: '#111827',
         border: meta.color,
@@ -355,7 +355,7 @@ function buildNodesData(visualMode) {
       },
       font: {
         color: '#f3f4f6',
-        size: visualMode === 'cards' ? 12.5 : 12,
+        size: (visualMode === 'cards' || visualMode === 'tree') ? 12.5 : 12,
         face: 'Inter, sans-serif',
         background: visualMode === 'radial' ? 'rgba(10, 14, 23, 0.85)' : undefined,
         strokeWidth: visualMode === 'radial' ? 0 : 2,
@@ -392,11 +392,15 @@ function buildEdgesData(visualMode) {
         smooth: visualMode === 'radial' ? {
           type: 'curvedCW',
           roundness: 0.15
+        } : (visualMode === 'tree' ? {
+          type: 'cubicBezier',
+          forceDirection: 'vertical',
+          roundness: 0.4
         } : {
           type: 'cubicBezier',
           forceDirection: 'horizontal',
           roundness: 0.5
-        }
+        })
       });
     });
   });
@@ -404,7 +408,29 @@ function buildEdgesData(visualMode) {
 }
 
 function getNetworkOptions(visualMode) {
-  if (visualMode === 'cards') {
+  if (visualMode === 'tree') {
+    return {
+      layout: {
+        hierarchical: {
+          enabled: true,
+          direction: 'UD', // Top-Down Tree: Axiom Roots at the top, conclusions flowing down
+          sortMethod: 'directed',
+          levelSeparation: 220,
+          nodeSpacing: 180,
+          treeSpacing: 220,
+          parentCentralization: true
+        }
+      },
+      physics: false,
+      interaction: {
+        dragNodes: false,
+        dragView: true,
+        zoomView: false,
+        hover: true,
+        hoverConnectedEdges: true
+      }
+    };
+  } else if (visualMode === 'cards') {
     return {
       layout: {
         hierarchical: {
@@ -852,9 +878,18 @@ function getAncestors(id, visited = new Set()) {
 }
 
 function computeLineageSteps(id) {
-  const chain = [];
   const current = conceptMap.get(id);
-  if (!current) return chain;
+  if (!current) return [];
+
+  // Prioritize strict Kahn topological sort ancestral_chain from root axioms to current concept
+  if (current.ancestral_chain && current.ancestral_chain.length > 0) {
+    return current.ancestral_chain.map(cid => {
+      const node = conceptMap.get(cid) || { id: cid, label: cid, level: 0, category: 'foundation' };
+      return { node, depth: node.level || 0 };
+    });
+  }
+
+  const chain = [];
 
   function traverse(node, depth = 0) {
     chain.push({ node, depth });
@@ -1859,6 +1894,17 @@ function initLegendModal() {
     modal.classList.add('active');
     modal.classList.add('open');
     btnClose?.focus();
+
+    // Dynamically render Deductive Tree KaTeX formula
+    const targetFormula = document.getElementById('tree-formula-katex');
+    if (targetFormula && window.katex && !targetFormula.dataset.rendered) {
+      window.katex.render(
+        "\\operatorname{nível}(v) = 1 + \\max_{u \\in \\operatorname{premissas}(v)} \\operatorname{nível}(u), \\quad \\operatorname{nível}(\\text{Axioma}) = 0",
+        targetFormula,
+        { displayMode: true, throwOnError: false }
+      );
+      targetFormula.dataset.rendered = "true";
+    }
   };
 
   const closeModal = () => {
