@@ -57,6 +57,9 @@
       <button class="btn" id="btn-fit-view" title="Enquadrar todos os nós no ecrã">
         ⛶ Centrar
       </button>
+      <button class="btn" id="btn-open-curator" title="Abrir Modo Curador / Editor de Conhecimento" style="border-color: #a78bfa; color: #c4b5fd;">
+        🛠️ Curador
+      </button>
       <a href="synapsis_graph.json" download class="btn" title="Descarregar grafo completo em JSON estruturado para ferramentas de IA" style="text-decoration:none;">
         🤖 JSON IA
       </a>
@@ -270,6 +273,129 @@
           <h4>🪐 Órbitas Radiais Concêntricas</h4>
           <p>Do centro para fora na visualização cósmica: viajas dos <strong>Fundamentos Matemáticos (Nível 0)</strong> até aos <strong>Modelos Avançados e Aplicações Terminais (Níveis 1 a 5)</strong> de Inteligência Artificial e Machine Learning.</p>
         </div>
+      </div>
+    </div>
+  </div>
+
+  
+  <!-- Modal de Curadoria & Edição de Grafo (Modo Editor / Admin) -->
+  <div id="curator-modal" class="legend-modal" role="dialog" aria-modal="true" aria-labelledby="curator-modal-title">
+    <div class="legend-modal-content" style="max-width: 780px; max-height: 88vh;">
+      <div class="legend-header">
+        <h3 id="curator-modal-title">🛠️ Modo Curador • Edição & Gestão de Relações do Grafo</h3>
+        <button class="close-btn" id="close-curator-btn" aria-label="Fechar editor">✕</button>
+      </div>
+      <div class="legend-body" style="padding: 16px 20px;">
+        
+        <!-- Barra de Autenticação / Papéis -->
+        <div style="background: rgba(255, 255, 255, 0.04); border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; margin-bottom: 16px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px;">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span style="font-size: 13px; font-weight: 600; color: var(--text-primary);">Papel Atual:</span>
+            <span id="curator-role-badge" style="background: #3b82f6; color: #fff; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; text-transform: uppercase;">Editor</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <select id="curator-role-select" style="background: var(--bg-tertiary); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 6px; padding: 4px 8px; font-size: 12px;">
+              <option value="editor" selected>✏️ Editor (Modificar & Adicionar Conceitos)</option>
+              <option value="viewer">👁️ Leitor (Apenas Visualização)</option>
+              <option value="admin">🔐 Administrador (Acesso Mestre & Exportação)</option>
+            </select>
+            <input type="password" id="curator-admin-pin" placeholder="PIN Admin" style="display: none; width: 110px; background: var(--bg-tertiary); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 6px; padding: 4px 8px; font-size: 12px;">
+            <button id="curator-btn-auth" class="btn" style="padding: 4px 10px; font-size: 12px; display: none;">Entrar</button>
+          </div>
+        </div>
+
+        <!-- Seletor de Conceito / Ação -->
+        <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 16px; align-items: center;">
+          <select id="curator-concept-select" style="flex: 1; min-width: 240px; background: var(--bg-tertiary); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 6px; padding: 6px 10px; font-size: 13px;">
+            <option value="">-- Selecionar Conceito Existente para Editar --</option>
+          </select>
+          <button id="curator-btn-new" class="btn" style="border-color: #10b981; color: #34d399;">➕ Novo Conceito</button>
+          <button id="curator-btn-reset-factory" class="btn" style="border-color: #ef4444; color: #f87171; display: none;" title="Restaurar base de fábrica">🔄 Repor Fábrica</button>
+        </div>
+
+        <!-- Formulário de Edição -->
+        <div id="curator-form-container" style="display: flex; flex-direction: column; gap: 12px;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <div>
+              <label style="display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">ID Único (alfanumérico/snake_case):</label>
+              <input type="text" id="curator-input-id" style="width: 100%; box-sizing: border-box; background: var(--bg-tertiary); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 6px; padding: 6px 8px; font-size: 12px;">
+            </div>
+            <div>
+              <label style="display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">Nome / Título:</label>
+              <input type="text" id="curator-input-label" style="width: 100%; box-sizing: border-box; background: var(--bg-tertiary); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 6px; padding: 6px 8px; font-size: 12px;">
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <div>
+              <label style="display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">Domínio:</label>
+              <select id="curator-input-domain" style="width: 100%; box-sizing: border-box; background: var(--bg-tertiary); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 6px; padding: 6px 8px; font-size: 12px;">
+                <option value="academic_ml">Aprendizagem Computacional (academic_ml)</option>
+                <option value="foundations">Fundamentos Matemáticos (foundations)</option>
+                <option value="masters_ai">IA Integrada (masters_ai)</option>
+              </select>
+            </div>
+            <div>
+              <label style="display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">Categoria Visual:</label>
+              <select id="curator-input-category" style="width: 100%; box-sizing: border-box; background: var(--bg-tertiary); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 6px; padding: 6px 8px; font-size: 12px;">
+                <option value="foundation">Fundamentos Matemáticos</option>
+                <option value="ml_core">Conceito Nuclear de ML</option>
+                <option value="preprocessing">Pré-processamento & Escala</option>
+                <option value="non_connectionist">Não-Conexionista (Árvores, OLS, Bayes)</option>
+                <option value="connectionist">Conexionista (Perceptron, Redes)</option>
+                <option value="rule_based">Baseado em Regras</option>
+                <option value="unsupervised">Não-Supervisionado</option>
+                <option value="metrics">Métricas & Diagnóstico</option>
+                <option value="complementary">Complementar & Híbrido</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label style="display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">Resumo Conciso:</label>
+            <input type="text" id="curator-input-summary" style="width: 100%; box-sizing: border-box; background: var(--bg-tertiary); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 6px; padding: 6px 8px; font-size: 12px;">
+          </div>
+
+          <div>
+            <label style="display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">Definição & Mecânica Rigorosa:</label>
+            <textarea id="curator-input-definition" rows="3" style="width: 100%; box-sizing: border-box; background: var(--bg-tertiary); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 6px; padding: 6px 8px; font-size: 12px; font-family: inherit; resize: vertical;"></textarea>
+          </div>
+
+          <div>
+            <label style="display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">Fórmula Matemática (LaTeX):</label>
+            <input type="text" id="curator-input-formula" style="width: 100%; box-sizing: border-box; background: var(--bg-tertiary); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 6px; padding: 6px 8px; font-size: 12px; font-family: monospace;">
+          </div>
+
+          <!-- Gestor de Relações de Pré-requisitos -->
+          <div>
+            <label style="display: block; font-size: 12px; font-weight: 600; color: #60a5fa; margin-bottom: 4px;">
+              🔗 Pré-requisitos Formativos (Conceitos dos quais este depende):
+            </label>
+            <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 6px;">
+              Marque os conceitos que devem ser compreendidos ANTES deste. O nível dedutivo será calculado automaticamente.
+            </div>
+            <div id="curator-prereqs-checklist" style="max-height: 140px; overflow-y: auto; background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 6px; padding: 8px; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 6px;">
+              <!-- Gerado dinamicamente -->
+            </div>
+          </div>
+
+          <!-- Caixa de Diagnóstico da Validação -->
+          <div id="curator-validation-box" style="display: none; padding: 10px; border-radius: 6px; font-size: 12px; line-height: 1.5;"></div>
+
+          <!-- Ações do Curador -->
+          <div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: flex-end; margin-top: 8px;">
+            <button id="curator-btn-validate" class="btn" style="border-color: #60a5fa; color: #93c5fd;">
+              🔍 Testar Integridade (DAG & Níveis)
+            </button>
+            <button id="curator-btn-save" class="btn" style="background: #2563eb; color: #fff; font-weight: 600; border-color: #3b82f6;">
+              💾 Aplicar no Grafo
+            </button>
+            <button id="curator-btn-export-js" class="btn" style="border-color: #f59e0b; color: #fbbf24; display: none;" title="Descarregar ficheiro concepts.js consolidado">
+              📥 Exportar concepts.js
+            </button>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>

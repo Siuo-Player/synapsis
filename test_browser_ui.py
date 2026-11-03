@@ -108,6 +108,16 @@ def run_browser_tests():
         time.sleep(0.3)
         print("✓ Step 5: Domain taxonomy filter dropdown functional.")
 
+        # 6. Curator Modal toggle test
+        btn_curator = page.locator("#btn-open-curator")
+        btn_curator.click()
+        time.sleep(0.3)
+        assert page.is_visible("#curator-modal"), "Curator modal should be visible"
+        btn_close_curator = page.locator("#close-curator-btn")
+        btn_close_curator.click()
+        time.sleep(0.3)
+        print("✓ Step 5b: Knowledge Curator & Graph Relationship Editor modal functional.")
+
         # 6. Search bar functionality
         search_input = page.locator("#search-input")
         search_input.fill("shannon")

@@ -54,6 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initCanvasControls();
   initAiExportButton();
   initLegendModal();
+  initCuratorEngine();
   initDeepLinking();
 
   // Initial domain and concept from URL hash or default
@@ -2019,4 +2020,392 @@ function showToast(message) {
   setTimeout(() => {
     toast.classList.remove('show');
   }, 3500);
+}
+
+
+// ============================================================================
+// Knowledge Curator & Graph Relationship Editor Engine (Synapsis 3.2.0)
+// ============================================================================
+
+let curatorCurrentRole = localStorage.getItem('synapsis_curator_role') || 'editor';
+const ADMIN_MASTER_PIN = 'synapsis-admin';
+
+// Initialize Curator UI & Events
+function initCuratorEngine() {
+  const btnOpen = document.getElementById('btn-open-curator');
+  const modal = document.getElementById('curator-modal');
+  const btnClose = document.getElementById('close-curator-btn');
+  if (!btnOpen || !modal) return;
+
+  const roleSelect = document.getElementById('curator-role-select');
+  const roleBadge = document.getElementById('curator-role-badge');
+  const adminPinInput = document.getElementById('curator-admin-pin');
+  const btnAuth = document.getElementById('curator-btn-auth');
+  const btnExportJs = document.getElementById('curator-btn-export-js');
+  const btnResetFactory = document.getElementById('curator-btn-reset-factory');
+  const conceptSelect = document.getElementById('curator-concept-select');
+  const btnNew = document.getElementById('curator-btn-new');
+  const btnValidate = document.getElementById('curator-btn-validate');
+  const btnSave = document.getElementById('curator-btn-save');
+
+  // Load custom data from localStorage if existing
+  const savedConcepts = localStorage.getItem('synapsis_custom_concepts');
+  if (savedConcepts) {
+    try {
+      const parsed = jsonParseSafe(savedConcepts);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        CONCEPTS_DATA.length = 0;
+        parsed.forEach(p => CONCEPTS_DATA.push(p));
+        conceptMap.clear();
+        CONCEPTS_DATA.forEach(c => conceptMap.set(c.id, c));
+      }
+    } catch (e) {
+      console.warn("Could not load custom concepts from localStorage:", e);
+    }
+  }
+
+  function jsonParseSafe(str) {
+    return JSON.parse(str);
+  }
+
+  function updateRoleUI() {
+    roleSelect.value = curatorCurrentRole;
+    roleBadge.textContent = curatorCurrentRole.toUpperCase();
+    if (curatorCurrentRole === 'admin') {
+      roleBadge.style.background = '#8b5cf6';
+      btnExportJs.style.display = 'inline-flex';
+      btnResetFactory.style.display = 'inline-flex';
+    } else if (curatorCurrentRole === 'editor') {
+      roleBadge.style.background = '#3b82f6';
+      btnExportJs.style.display = 'none';
+      btnResetFactory.style.display = 'none';
+    } else {
+      roleBadge.style.background = '#6b7280';
+      btnExportJs.style.display = 'none';
+      btnResetFactory.style.display = 'none';
+    }
+    const isReadOnly = curatorCurrentRole === 'viewer';
+    btnSave.disabled = isReadOnly;
+    btnNew.disabled = isReadOnly;
+  }
+
+  roleSelect.addEventListener('change', e => {
+    const val = e.target.value;
+    if (val === 'admin') {
+      adminPinInput.style.display = 'inline-block';
+      btnAuth.style.display = 'inline-flex';
+      adminPinInput.focus();
+    } else {
+      adminPinInput.style.display = 'none';
+      btnAuth.style.display = 'none';
+      curatorCurrentRole = val;
+      localStorage.setItem('synapsis_curator_role', curatorCurrentRole);
+      updateRoleUI();
+    }
+  });
+
+  btnAuth.addEventListener('click', () => {
+    if (adminPinInput.value === ADMIN_MASTER_PIN) {
+      curatorCurrentRole = 'admin';
+      localStorage.setItem('synapsis_curator_role', 'admin');
+      adminPinInput.style.display = 'none';
+      btnAuth.style.display = 'none';
+      adminPinInput.value = '';
+      updateRoleUI();
+      alert("Autenticado com sucesso como Administrador do Synapsis.");
+    } else {
+      alert("PIN de Administrador incorreto.");
+      roleSelect.value = curatorCurrentRole;
+    }
+  });
+
+  function populateConceptsDropdown() {
+    conceptSelect.innerHTML = '<option value="">-- Selecionar Conceito Existente para Editar --</option>';
+    const sorted = [...CONCEPTS_DATA].sort((a, b) => a.label.localeCompare(b.label));
+    sorted.forEach(c => {
+      const opt = document.createElement('option');
+      opt.value = c.id;
+      opt.textContent = `${c.label} (L${c.level} • ${c.id})`;
+      conceptSelect.appendChild(opt);
+    });
+  }
+
+  function populateChecklist(selectedDeps = [], currentId = '') {
+    const container = document.getElementById('curator-prereqs-checklist');
+    if (!container) return;
+    container.innerHTML = '';
+    const sorted = [...CONCEPTS_DATA].sort((a, b) => (a.level || 0) - (b.level || 0) || a.label.localeCompare(b.label));
+    sorted.forEach(c => {
+      if (c.id === currentId) return; // Cannot depend on itself directly
+      const label = document.createElement('label');
+      label.style.display = 'flex';
+      label.style.alignItems = 'center';
+      label.style.gap = '6px';
+      label.style.fontSize = '11.5px';
+      label.style.cursor = 'pointer';
+
+      const chk = document.createElement('input');
+      chk.type = 'checkbox';
+      chk.value = c.id;
+      chk.className = 'curator-dep-checkbox';
+      chk.checked = selectedDeps.includes(c.id);
+
+      label.appendChild(chk);
+      const span = document.createElement('span');
+      span.textContent = `[L${c.level}] ${c.label}`;
+      label.appendChild(span);
+      container.appendChild(label);
+    });
+  }
+
+  function getSelectedPrereqs() {
+    const checked = [];
+    document.querySelectorAll('.curator-dep-checkbox:checked').forEach(chk => {
+      checked.push(chk.value);
+    });
+    return checked;
+  }
+
+  function loadConceptIntoForm(cid) {
+    const c = conceptMap.get(cid);
+    if (!c) return;
+    document.getElementById('curator-input-id').value = c.id;
+    document.getElementById('curator-input-id').readOnly = true;
+    document.getElementById('curator-input-label').value = c.label || '';
+    document.getElementById('curator-input-domain').value = c.domain || 'academic_ml';
+    document.getElementById('curator-input-category').value = c.category || 'non_connectionist';
+    document.getElementById('curator-input-summary').value = c.summary || '';
+    document.getElementById('curator-input-definition').value = c.definition || '';
+    document.getElementById('curator-input-formula').value = c.formula || '';
+    populateChecklist(c.dependencies || [], c.id);
+  }
+
+  conceptSelect.addEventListener('change', e => {
+    if (e.target.value) {
+      loadConceptIntoForm(e.target.value);
+    }
+  });
+
+  btnNew.addEventListener('click', () => {
+    conceptSelect.value = '';
+    document.getElementById('curator-input-id').value = '';
+    document.getElementById('curator-input-id').readOnly = false;
+    document.getElementById('curator-input-label').value = '';
+    document.getElementById('curator-input-domain').value = 'academic_ml';
+    document.getElementById('curator-input-category').value = 'non_connectionist';
+    document.getElementById('curator-input-summary').value = '';
+    document.getElementById('curator-input-definition').value = '';
+    document.getElementById('curator-input-formula').value = '';
+    populateChecklist([], '');
+    document.getElementById('curator-input-id').focus();
+  });
+
+  // Client-Side Graph Integrity Engine
+  function validateCuratorGraph(candidateConcept) {
+    const testMap = new Map();
+    CONCEPTS_DATA.forEach(c => {
+      if (c.id !== candidateConcept.id) {
+        testMap.set(c.id, { ...c, dependencies: [...(c.dependencies || [])] });
+      }
+    });
+    testMap.set(candidateConcept.id, candidateConcept);
+
+    // 1. Dependency resolution
+    for (const [cid, c] of testMap.entries()) {
+      for (const dep of c.dependencies) {
+        if (!testMap.has(dep)) {
+          return { valid: false, error: `Pré-requisito '${dep}' não existe no grafo.` };
+        }
+      }
+    }
+
+    // 2. Cycle detection (DFS)
+    const visited = {};
+    const cyclePath = [];
+    function dfs(u, path) {
+      visited[u] = 1;
+      for (const dep of testMap.get(u).dependencies) {
+        if (visited[dep] === 1) {
+          cyclePath.push(...path, dep);
+          return true;
+        }
+        if (!visited[dep]) {
+          if (dfs(dep, [...path, dep])) return true;
+        }
+      }
+      visited[u] = 2;
+      return false;
+    }
+
+    for (const cid of testMap.keys()) {
+      if (!visited[cid]) {
+        if (dfs(cid, [cid])) {
+          return { valid: false, error: `Ciclo circular detetado: ${cyclePath.join(' -> ')}` };
+        }
+      }
+    }
+
+    // 3. Level computation: level(v) = 0 if no deps else 1 + max(level(u))
+    const levels = {};
+    for (const [cid, c] of testMap.entries()) {
+      if (!c.dependencies || c.dependencies.length === 0) levels[cid] = 0;
+    }
+
+    let changed = true;
+    let guard = 0;
+    while (changed && guard < 100) {
+      guard++;
+      changed = false;
+      for (const [cid, c] of testMap.entries()) {
+        if (c.dependencies && c.dependencies.length > 0) {
+          if (c.dependencies.every(d => levels[d] !== undefined)) {
+            const calculated = 1 + Math.max(...c.dependencies.map(d => levels[d]));
+            if (levels[cid] !== calculated) {
+              levels[cid] = calculated;
+              changed = true;
+            }
+          }
+        }
+      }
+    }
+
+    const calculatedLevel = levels[candidateConcept.id] !== undefined ? levels[candidateConcept.id] : 0;
+    return { valid: true, level: calculatedLevel, totalNodes: testMap.size, levelsMap: levels };
+  }
+
+  btnValidate.addEventListener('click', () => {
+    const box = document.getElementById('curator-validation-box');
+    const cid = document.getElementById('curator-input-id').value.trim();
+    if (!cid) {
+      alert("Indique o ID do conceito.");
+      return;
+    }
+    const candidate = {
+      id: cid,
+      label: document.getElementById('curator-input-label').value.trim() || cid,
+      dependencies: getSelectedPrereqs()
+    };
+    const res = validateCuratorGraph(candidate);
+    box.style.display = 'block';
+    if (!res.valid) {
+      box.style.background = 'rgba(239, 68, 68, 0.15)';
+      box.style.border = '1px solid #ef4444';
+      box.style.color = '#fca5a5';
+      box.innerHTML = `<strong>❌ Erro de Validação:</strong> ${res.error}`;
+    } else {
+      box.style.background = 'rgba(16, 185, 129, 0.15)';
+      box.style.border = '1px solid #10b981';
+      box.style.color = '#6ee7b7';
+      box.innerHTML = `<strong>✓ Grafo Válido:</strong> DAG estrito sem ciclos.<br>Nível Dedutivo Calculado: <strong>L = ${res.level}</strong> (Premissa mais avançada: L = ${res.level > 0 ? res.level - 1 : 0}).`;
+    }
+  });
+
+  btnSave.addEventListener('click', () => {
+    const cid = document.getElementById('curator-input-id').value.trim();
+    const label = document.getElementById('curator-input-label').value.trim();
+    if (!cid || !label) {
+      alert("Preencha o ID e o Nome do conceito.");
+      return;
+    }
+
+    const prereqs = getSelectedPrereqs();
+    const candidate = {
+      id: cid,
+      label: label,
+      domain: document.getElementById('curator-input-domain').value,
+      domains: [document.getElementById('curator-input-domain').value],
+      category: document.getElementById('curator-input-category').value,
+      course_module: 'Módulo Curadoria Dinâmica',
+      summary: document.getElementById('curator-input-summary').value.trim(),
+      definition: document.getElementById('curator-input-definition').value.trim(),
+      formula: document.getElementById('curator-input-formula').value.trim(),
+      code: '# Código curado pelo utilizador',
+      code_language: 'python',
+      code_status: 'user_curated',
+      references: 'Curadoria Local Synapsis',
+      dependencies: prereqs,
+      simulator: null
+    };
+
+    const res = validateCuratorGraph(candidate);
+    if (!res.valid) {
+      alert("Falha na validação do grafo: " + res.error);
+      return;
+    }
+
+    candidate.level = res.level;
+
+    // Apply levels in cascade
+    for (const [k, v] of Object.entries(res.levelsMap)) {
+      const target = CONCEPTS_DATA.find(c => c.id === k);
+      if (target) target.level = v;
+    }
+
+    const idx = CONCEPTS_DATA.findIndex(c => c.id === cid);
+    if (idx >= 0) {
+      CONCEPTS_DATA[idx] = { ...CONCEPTS_DATA[idx], ...candidate };
+    } else {
+      CONCEPTS_DATA.push(candidate);
+    }
+
+    // Save to localStorage
+    localStorage.setItem('synapsis_custom_concepts', JSON.stringify(CONCEPTS_DATA));
+
+    // Refresh memory map
+    conceptMap.clear();
+    CONCEPTS_DATA.forEach(c => conceptMap.set(c.id, c));
+
+    // Rebuild visual network
+    const newNodes = buildNodesData(currentVisualMode);
+    const newEdges = buildEdgesData(currentVisualMode);
+    nodesDataSet.clear();
+    nodesDataSet.add(newNodes);
+    edgesDataSet.clear();
+    edgesDataSet.add(newEdges);
+    network.setOptions(getNetworkOptions(currentVisualMode));
+    applyDomainFilter(currentDomain);
+
+    populateConceptsDropdown();
+    conceptSelect.value = cid;
+
+    alert(`Conceito '${label}' guardado com sucesso no nível L=${candidate.level}! O grafo foi atualizado.`);
+  });
+
+  btnResetFactory.addEventListener('click', () => {
+    if (confirm("Tem a certeza de que deseja repor o grafo oficial de fábrica e apagar as edições locais?")) {
+      localStorage.removeItem('synapsis_custom_concepts');
+      window.location.reload();
+    }
+  });
+
+  btnExportJs.addEventListener('click', () => {
+    const fileContent = "// Synapsis • concepts.js Exportado via Modo Curador\nconst CONCEPTS_DATA = " + JSON.stringify(CONCEPTS_DATA, null, 2) + ";\n\nif (typeof module !== 'undefined' && module.exports) {\n  module.exports = { CONCEPTS_DATA };\n}\n";
+    const blob = new Blob([fileContent], { type: 'application/javascript;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'concepts.js';
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+
+  const openCurator = () => {
+    updateRoleUI();
+    populateConceptsDropdown();
+    modal.classList.add('active');
+    modal.classList.add('open');
+    btnClose?.focus();
+  };
+
+  const closeCurator = () => {
+    modal.classList.remove('active');
+    modal.classList.remove('open');
+    btnOpen?.focus();
+  };
+
+  btnOpen.addEventListener('click', openCurator);
+  btnClose.addEventListener('click', closeCurator);
+  modal.addEventListener('click', e => {
+    if (e.target === modal) closeCurator();
+  });
 }
