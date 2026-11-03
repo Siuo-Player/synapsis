@@ -1112,33 +1112,36 @@ function renderEntropyGainSimulator(container, concept) {
     document.getElementById('shannon-pl-val').textContent = `${pL.toFixed(2)} (válido: [${pLMin.toFixed(2)}, ${pLMax.toFixed(2)}])`;
 
     // Exact right-branch class proportion
-    const pR = (p - wL * pL) / (1 - wL);
+    // Exact calculations using SimulatorMath (guaranteed zero NaN on pR=0 or pR=1)
+    let res;
+    if (typeof SimulatorMath !== 'undefined') {
+      res = SimulatorMath.calculateEntropySplit(p, wL, pL);
+    } else {
+      const pR = Math.max(0, Math.min(1, (p - wL * pL) / (1 - wL)));
+      const safeEnt = (prob) => (prob <= 0 || prob >= 1) ? 0 : -(prob * Math.log2(prob) + (1 - prob) * Math.log2(1 - prob));
+      const hD = safeEnt(p);
+      const hDL = safeEnt(pL);
+      const hDR = safeEnt(pR);
+      const hSplit = wL * hDL + (1 - wL) * hDR;
+      const ig = Math.max(0, hD - hSplit);
+      const splitInfo = -(wL * Math.log2(wL) + (1 - wL) * Math.log2(1 - wL));
+      const gainRatio = splitInfo > 0.0001 ? (ig / splitInfo) : 0;
+      const giniD = 2 * p * (1 - p);
+      const giniDL = 2 * pL * (1 - pL);
+      const giniDR = 2 * pR * (1 - pR);
+      const giniSplit = wL * giniDL + (1 - wL) * giniDR;
+      const deltaGini = Math.max(0, giniD - giniSplit);
+      res = { pR, hD, informationGain: ig, gainRatio, giniReduction: deltaGini };
+    }
 
-    // 1. Shannon Entropies (ID3)
-    const hD = -(p * Math.log2(p) + (1 - p) * Math.log2(1 - p));
-    const hDL = -(pL * Math.log2(pL) + (1 - pL) * Math.log2(1 - pL));
-    const hDR = -(pR * Math.log2(pR) + (1 - pR) * Math.log2(1 - pR));
-    const hSplit = wL * hDL + (1 - wL) * hDR;
-    const ig = Math.max(0, hD - hSplit);
-
-    // 2. C4.5 Split Info & Gain Ratio
-    const splitInfo = -(wL * Math.log2(wL) + (1 - wL) * Math.log2(1 - wL));
-    const gainRatio = splitInfo > 0.0001 ? (ig / splitInfo) : 0;
-
-    // 3. CART Gini Impurity Reduction
-    const giniD = 2 * p * (1 - p);
-    const giniDL = 2 * pL * (1 - pL);
-    const giniDR = 2 * pR * (1 - pR);
-    const giniSplit = wL * giniDL + (1 - wL) * giniDR;
-    const deltaGini = Math.max(0, giniD - giniSplit);
-
-    document.getElementById('shannon-h-val').textContent = hD.toFixed(3) + ' bits';
-    document.getElementById('shannon-ig-val').textContent = ig.toFixed(3) + ' bits';
-    document.getElementById('shannon-gr-val').textContent = gainRatio.toFixed(3);
-    document.getElementById('shannon-dgini-val').textContent = deltaGini.toFixed(3);
+    document.getElementById('shannon-h-val').textContent = res.hD.toFixed(3) + ' bits';
+    document.getElementById('shannon-ig-val').textContent = res.informationGain.toFixed(3) + ' bits';
+    document.getElementById('shannon-gr-val').textContent = res.gainRatio.toFixed(3);
+    document.getElementById('shannon-dgini-val').textContent = res.giniReduction.toFixed(3);
 
     const statusEl = document.getElementById('shannon-status');
-    statusEl.innerHTML = `Conservação Exata: P(C₁|Dir) = ${pR.toFixed(2)} (Ramo Direito). Ganho ID3 = <strong>${ig.toFixed(3)} bits</strong> | Redução Gini CART = <strong>${deltaGini.toFixed(3)}</strong>.`;
+    statusEl.innerHTML = `Conservação Exata: P(C₁|Dir) = ${res.pR.toFixed(2)} (Ramo Direito). Ganho ID3 = <strong>${res.informationGain.toFixed(3)} bits</strong> | Redução Gini CART = <strong>${res.giniReduction.toFixed(3)}</strong>.`;
+
   };
 
   sliderP.addEventListener('input', calc);

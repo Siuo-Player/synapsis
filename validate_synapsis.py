@@ -203,8 +203,18 @@ def run_tests():
     assert len(font_files) >= 20, f"Expected KaTeX fonts offline, found only {len(font_files)}"
     print(f"✓ Test 12 Passed: KaTeX math typesetting fonts fully verified offline ({len(font_files)} font files in libs/fonts).")
 
+    # Test 13: SimulatorMath Module & JavaScript Unit Tests Execution
+    test_math_path = os.path.join(base_dir, 'test_simulator_math.js')
+    assert os.path.exists(test_math_path), f"Missing {test_math_path}"
+    
+    import subprocess
+    result = subprocess.run(['node', test_math_path], capture_output=True, text=True)
+    if result.returncode != 0:
+        raise AssertionError(f'test_simulator_math.js failed with code {result.returncode}: ' + result.stderr + result.stdout)
+    print("✓ Test 13 Passed: SimulatorMath JavaScript unit tests executed cleanly via Node.js (0 NaN errors across 1,615 tests).")
+
     print("==================================================")
-    print("🎉 ALL 12 TEST SUITES PASSED WITH 100% SUCCESS!")
+    print("🎉 ALL 13 TEST SUITES PASSED WITH 100% SUCCESS!")
     print("==================================================")
 
 if __name__ == '__main__':

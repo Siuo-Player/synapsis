@@ -7,7 +7,10 @@
     "schema_version",
     "app_name",
     "relation_semantics",
+    "edge_direction",
+    "causal_claim",
     "taxonomy_domains",
+    "graph_representation",
     "concepts_count",
     "edges_count",
     "concepts"
@@ -76,7 +79,42 @@
       }
     },
     "graph_representation": {
-      "type": "object"
+      "type": "object",
+      "required": [
+        "type",
+        "description",
+        "prerequisites_by_concept",
+        "dependents_by_prerequisite"
+      ],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "adjacency_list"
+          ]
+        },
+        "description": {
+          "type": "string"
+        },
+        "prerequisites_by_concept": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "dependents_by_prerequisite": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
     },
     "concepts_count": {
       "type": "integer",
