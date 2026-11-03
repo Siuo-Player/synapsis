@@ -1,0 +1,217 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "SynapsisGraphSchema",
+  "description": "Formal Draft-07 Schema for Synapsis 3.1 Knowledge Graph and Pedagogical Prerequisite Network",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "app_name",
+    "relation_semantics",
+    "taxonomy_domains",
+    "concepts_count",
+    "edges_count",
+    "concepts"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "schema_version": {
+      "type": "string",
+      "enum": [
+        "3.1.0"
+      ]
+    },
+    "app_name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "pedagogical_disclaimer": {
+      "type": "string"
+    },
+    "relation_semantics": {
+      "type": "string",
+      "enum": [
+        "pedagogical_prerequisite"
+      ]
+    },
+    "edge_direction": {
+      "type": "string",
+      "enum": [
+        "prerequisite_to_dependent"
+      ]
+    },
+    "causal_claim": {
+      "type": "boolean",
+      "enum": [
+        false
+      ]
+    },
+    "taxonomy_domains": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "name"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "enum": [
+              "foundations",
+              "academic_ml",
+              "masters_ai"
+            ]
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "graph_representation": {
+      "type": "object"
+    },
+    "concepts_count": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "edges_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "concepts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "label",
+          "domain",
+          "category",
+          "level",
+          "summary",
+          "definition",
+          "dependencies",
+          "ancestral_chain"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9_]+$"
+          },
+          "label": {
+            "type": "string"
+          },
+          "domain": {
+            "type": "string",
+            "enum": [
+              "foundations",
+              "academic_ml",
+              "masters_ai"
+            ]
+          },
+          "domains": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "foundations",
+                "academic_ml",
+                "masters_ai"
+              ]
+            }
+          },
+          "category": {
+            "type": "string"
+          },
+          "course_module": {
+            "type": "string"
+          },
+          "level": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 6
+          },
+          "summary": {
+            "type": "string"
+          },
+          "definition": {
+            "type": "string"
+          },
+          "formula": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "code": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "code_language": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "code_status": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "references": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "dependencies": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "ancestral_chain": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "simulator": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "entropy_gain",
+                  "knn_spatial",
+                  "confusion_matrix",
+                  "neural_activations",
+                  "bayesian_inference",
+                  "gradient_descent",
+                  "svm_margin"
+                ]
+              },
+              "label": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Synapsis • Grafo Pedagógico de Inteligência Artificial</title>
+  <link rel="icon" type="image/png" href="knowledge_nexus.png">
+  
+  <!-- Estilos e Bibliotecas Locais (100% Offline e GitHub Pages Ready) -->
+  <link rel="stylesheet" href="libs/katex.min.css">
+  <link rel="stylesheet" href="style.css">
+  
+  <script src="libs/katex.min.js"></script>
+  <script src="libs/vis-network.min.js"></script>
+</head>
+<body>
+
+  <!-- Header Superior -->
+  <header>
+    <div class="logo-area">
+      <img src="knowledge_nexus.png" alt="Synapsis Logo" style="width: 34px; height: 34px; border-radius: 50%; border: 1px solid #60a5fa;">
+      <div class="logo-title">
+        <h1>Synapsis • Conhecimento Integrado</h1>
+        <span>Estudo Autónomo de Inteligência Artificial • Grafo de Pré-requisitos</span>
+      </div>
+    </div>
+
+    <!-- Seletor de Domínio Modular -->
+    <div class="domain-selector-wrapper">
+      <select id="domain-select" class="domain-select" title="Selecione o domínio de conhecimento">
+        <option value="all">🌐 Todos os Domínios (Visão Integrada)</option>
+        <option value="academic_ml" selected>🤖 Aprendizagem Computacional (Machine Learning)</option>
+        <option value="foundations">📐 Fundamentos Matemáticos</option>
+        <option value="masters_ai">🧠 Inteligência Artificial Integrada</option>
+      </select>
+    </div>
+
+    <!-- Barra de Pesquisa Rápida com Autocomplete -->
+    <div class="search-controls">
+      <div class="search-input-wrapper">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="search-input" placeholder="Pesquisar conceito, fórmula, palavra-chave ou código..." autocomplete="off">
+        <div id="search-results-dropdown" class="search-results-dropdown"></div>
+      </div>
+    </div>
+
+    <!-- Modos de Visualização (Órbita Radial Concêntrica, Caixas, Orgânico) -->
+    <div class="view-modes-bar" id="view-modes-bar">
+      <button class="view-mode-btn active" data-mode="radial" title="Modo Radial com órbitas circulares e nós concêntricos">🪐 Órbita Radial</button>
+      <button class="view-mode-btn" data-mode="cards" title="Modo Fluxograma com caixas retangulares e níveis">📦 Caixas</button>
+      <button class="view-mode-btn" data-mode="organic" title="Modo Orgânico com atração gravitacional">🕸️ Orgânico</button>
+    </div>
+
+    <!-- Ações e Controlos -->
+    <div class="header-actions">
+      <button class="btn" id="btn-fit-view" title="Enquadrar todos os nós no ecrã">
+        ⛶ Centrar
+      </button>
+      <a href="synapsis_graph.json" download class="btn" title="Descarregar grafo completo em JSON estruturado para ferramentas de IA" style="text-decoration:none;">
+        🤖 JSON IA
+      </a>
+      <a href="llms.txt" target="_blank" class="btn" title="Ver especificações no formato padronizado llms.txt para agentes de IA" style="text-decoration:none;">
+        📄 llms.txt
+      </a>
+    </div>
+  </header>
+
+  <!-- Barra de Filtros por Categoria -->
+  <div class="filter-bar" id="category-filter-bar">
+    <!-- Gerado dinamicamente pelo app.js -->
+  </div>
+
+  <!-- Layout Principal -->
+  <div class="main-layout">
+    
+    <!-- Barra de Rastreio (Breadcrumbs) -->
+    <div class="breadcrumbs-bar" id="breadcrumbs-bar">
+      <!-- Gerado dinamicamente pelo app.js -->
+    </div>
+
+    <!-- Área do Grafo Interativo (Vis.js Network Canvas) -->
+    <div id="network-canvas"></div>
+
+    <!-- Barra Flutuante de Ferramentas de Zoom & Acessibilidade -->
+    <div class="canvas-toolbar">
+      <button class="canvas-btn" id="btn-zoom-in" title="Aumentar Zoom">➕</button>
+      <button class="canvas-btn" id="btn-zoom-out" title="Diminuir Zoom">➖</button>
+      <button class="canvas-btn" id="btn-trace-foundations" title="Rastrear caminho até às premissas axiomáticas">🧬 Linhagem</button>
+      <button class="canvas-btn" id="btn-toggle-inspector" title="Expandir/Recolher Painel de Conceito">📖 Painel</button>
+      <button class="canvas-btn" id="btn-open-legend" title="Ver Legenda do Grafo (Cores, Formas e Setas)">ℹ️ Legenda</button>
+    </div>
+
+    <!-- Painel de Inspeção do Conceito (Inspector Drawer) -->
+    <aside class="inspector-panel" id="inspector-panel">
+      
+      <!-- Cabeçalho do Painel -->
+      <div class="inspector-header">
+        <div>
+          <span class="concept-badge" id="concept-badge">Categoria</span>
+          <h2 class="concept-title" id="concept-title">Nome do Conceito</h2>
+          <div class="ai-buttons-row">
+            <button class="btn-ai-export" id="btn-copy-for-ai" title="Copiar definição, fórmulas, código e linhagem causal formatados para colar no ChatGPT, Claude ou Gemini">
+              <span>🤖</span>
+              <span>Contexto IA</span>
+            </button>
+            <button class="btn-socratic-export" id="btn-copy-socratic" title="Gerar e copiar um prompt de tutoria socrática para desafiar o teu domínio matemático do conceito">
+              <span>🧠</span>
+              <span>Prompt Socrático</span>
+            </button>
+          </div>
+        </div>
+        <button class="close-btn" id="close-inspector-btn" title="Recolher painel">✕</button>
+      </div>
+
+      <!-- Barra de Abas do Conceito -->
+      <nav class="tabs-bar">
+        <button class="tab-btn active" data-tab="definition">📖 Definição</button>
+        <button class="tab-btn" data-tab="simulator">⚡ Simulador</button>
+        <button class="tab-btn" data-tab="roadmap">🧭 Trilha</button>
+        <button class="tab-btn" data-tab="lineage">🧬 Linhagem</button>
+        <button class="tab-btn" data-tab="code">💻 Código</button>
+        <button class="tab-btn" data-tab="references">📚 Fontes</button>
+      </nav>
+
+      <!-- Aba 1: Definição & Intuição -->
+      <div class="tab-content active" id="tab-definition">
+        <div class="content-section">
+          <div class="section-label">Resumo Rápido</div>
+          <div class="concept-summary" id="concept-summary"></div>
+        </div>
+
+        <div class="content-section">
+          <div class="section-label">Mecânica e Explicação Rigorosa</div>
+          <div class="concept-def-text" id="concept-def-text"></div>
+        </div>
+
+        <div class="content-section">
+          <div class="section-label">Formulação Matemática</div>
+          <div class="math-card" id="concept-formula"></div>
+        </div>
+
+        <div class="content-section">
+          <div class="section-label">Exemplo Aplicado</div>
+          <div class="example-box" id="concept-example"></div>
+        </div>
+      </div>
+
+      <!-- Aba Nova: Simulador Interativo de Fórmulas -->
+      <div class="tab-content" id="tab-simulator">
+        <div class="content-section">
+          <div class="section-label">Laboratório Interativo de Fórmulas</div>
+          <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 14px;">
+            Manipule parâmetros em tempo real para visualizar o comportamento matemático, limites assintóticos e propriedades estatísticas.
+          </p>
+          <div id="interactive-simulator-container">
+            <!-- Gerado dinamicamente dependendo do interactiveType do conceito -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Aba Nova: Trilha de Estudo Passo a Passo (Ordenação Kahn) -->
+      <div class="tab-content" id="tab-roadmap">
+        <div class="content-section">
+          <div class="section-label">Trilha Pedagógica Recomendada (Ordem Topológica Kahn)</div>
+          <div class="mastery-tracker">
+            <div class="mastery-header">
+              <span>Conceitos Concluídos (Autoavaliação):</span>
+              <span id="mastery-percentage">0%</span>
+            </div>
+            <div class="mastery-bar-bg">
+              <div class="mastery-bar-fill" id="mastery-bar-fill" style="width: 0%;"></div>
+            </div>
+            <div class="roadmap-actions-row">
+              <button class="btn-roadmap-action" id="btn-mark-all-roadmap" title="Marcar todos os passos desta trilha como concluídos">✅ Concluir Todos</button>
+              <button class="btn-roadmap-action" id="btn-reset-roadmap" title="Reiniciar marcações desta trilha">🔄 Reiniciar</button>
+              <button class="btn-roadmap-action" id="btn-export-roadmap" title="Exportar progresso em ficheiro JSON">💾 Exportar Progresso</button>
+            </div>
+          </div>
+          <p style="font-size: 12px; color: var(--text-muted); margin: 12px 0;">
+            Sequência estrita de pré-requisitos para compreender este conceito desde as premissas primitivas:
+          </p>
+          <div id="study-roadmap-steps">
+            <!-- Gerado dinamicamente com checkboxes interativas -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Aba 2: Linhagem e Dependências Axiomáticas -->
+      <div class="tab-content" id="tab-lineage">
+        <div class="content-section">
+          <div class="section-label">Depende de (Pré-requisitos imediatos)</div>
+          <div class="chips-container" id="prereq-chips"></div>
+        </div>
+
+        <div class="content-section">
+          <div class="section-label">Necessário para (Conceitos derivados)</div>
+          <div class="chips-container" id="dependents-chips"></div>
+        </div>
+
+        <div class="content-section" style="margin-top: 24px;">
+          <div class="section-label">Caminho Axiomático até às Bases</div>
+          <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">
+            Inspirado no blueprint formal do Axiom: clique em qualquer etapa para recuar até aos teoremas e axiomas primitivos.
+          </p>
+          <div id="lineage-list"></div>
+        </div>
+      </div>
+
+      <!-- Aba 3: Código Scikit-Learn -->
+      <div class="tab-content" id="tab-code">
+        <div class="content-section">
+          <div class="section-label">Implementação em Python / Scikit-Learn</div>
+          <pre class="code-block"><code id="concept-code"></code></pre>
+        </div>
+      </div>
+
+      <!-- Aba 4: Referências dos Slides do Professor -->
+      <div class="tab-content" id="tab-references">
+        <div class="content-section">
+          <div class="section-label">Localização nos Materiais da UC</div>
+          <div class="ref-box" id="concept-refs"></div>
+          <p style="font-size: 12px; color: var(--text-secondary); margin-top: 14px; line-height: 1.5;">
+            Os materiais completos encontram-se descompilados em formato Markdown na pasta raiz para consulta textual instantânea.
+          </p>
+        </div>
+      </div>
+
+    </aside>
+
+  </div>
+
+  <!-- Modal de Legenda do Grafo e Semântica -->
+  <div id="legend-modal" class="legend-modal" role="dialog" aria-modal="true" aria-labelledby="legend-modal-title">
+    <div class="legend-modal-content">
+      <div class="legend-header">
+        <h3 id="legend-modal-title">ℹ️ Semântica do Grafo & Guia Visual</h3>
+        <button class="close-btn" id="close-legend-btn" aria-label="Fechar legenda">✕</button>
+      </div>
+      <div class="legend-body">
+        <div class="legend-section">
+          <h4>📐 Direção das Setas (Semântica Pedagógica)</h4>
+          <p><strong>A → B</strong> significa que <strong>A é um pré-requisito formativo de B</strong> (deves compreender o conceito A antes de abordar B). Não implica causalidade estatística nem física.</p>
+        </div>
+        <div class="legend-section">
+          <h4>🔷 Formas Geométricas dos Nós (Modo Orgânico & Badges)</h4>
+          <div class="legend-grid">
+            <div class="legend-item"><span class="legend-shape" style="color:#a78bfa;">◆</span> <div><strong>Losango:</strong> Axioma Primitivo / Fundamento Matemático (Nível 0)</div></div>
+            <div class="legend-item"><span class="legend-shape" style="color:#60a5fa;">●</span> <div><strong>Círculo:</strong> Algoritmo Indutivo ou Mecanismo Nuclear</div></div>
+            <div class="legend-item"><span class="legend-shape" style="color:#34d399;">■</span> <div><strong>Caixa:</strong> Pré-processamento ou Modelo Baseado em Regras</div></div>
+            <div class="legend-item"><span class="legend-shape" style="color:#f87171;">★</span> <div><strong>Estrela:</strong> Aplicação Terminal, Projeto de Avaliação ou Modelo Integrado</div></div>
+          </div>
+        </div>
+        <div class="legend-section">
+          <h4>🪐 Órbitas Radiais (Inspiração Axiom Blueprint)</h4>
+          <p>Do centro para fora na visualização cósmica: viajas dos <strong>Fundamentos Matemáticos (Nível 0)</strong> até aos <strong>Modelos Avançados e Aplicações Terminais (Níveis 1 a 5)</strong> do Mestrado em IA.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts de Dados e Lógica -->
+  <script src="concepts.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

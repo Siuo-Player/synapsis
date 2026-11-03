@@ -1,0 +1,1071 @@
+# Synapsis 3.1: Knowledge Graph & Pedagogical Prerequisite Ontology for AI Agents
+> Machine-readable curriculum and verified topological prerequisite graph for Artificial Intelligence and Machine Learning.
+
+## 1. Project Identity & Nature
+- **System Name**: Synapsis (Knowledge Graph & Pedagogical Prerequisite Network)
+- **Nature**: Independent self-study project developed by the author in collaboration with multiple AI assistants for autonomous exploratory learning.
+- **Scope**: Pure, objective mathematical foundations, machine learning algorithms, deep learning and integrated artificial intelligence paradigms.
+- **Semantics of Directed Edges**: A -> B denotes that Concept A is a FORMATIVE PREREQUISITE of Concept B. It does NOT imply statistical or physical causality.
+- **Graph Architecture**: Strictly acyclic Directed Acyclic Graph (DAG) with topological depth levels (0 to 5) computed by longest path.
+
+## 2. Core Domain Taxonomy
+1. `foundations`: Mathematical Foundations (Metric Spaces, Multivariable Calculus, Probability Theory, Convex Optimization, Information Theory, VC Bounds).
+2. `academic_ml`: Machine Learning (Decision Trees, Instance-based Learning, Bayesian Classifiers, Linear & Logistic Models, SVMs, Neural Networks, Ensembles, Clustering, Diagnostic Metrics).
+3. `masters_ai`: Integrated AI Paradigms (Symbolic GOFAI vs Connectionist, Evolutionary Computation, Swarm Optimization, MDPs, Reinforcement Learning, Transformers, Diffusion Models).
+
+## 3. Prerequisite Traversal Instructions for AI Agents
+- To teach or explain concept X, first inspect `Topological Study Path (Kahn Sort)` to see all necessary foundational prerequisites in sequence.
+- Sibling concepts that share prerequisites but have no edge between them can be studied in parallel.
+
+---
+
+### `computational_complexity`: Complexidade Algorítmica & Notação Big-O [Level 0 | Domain: foundations | foundation]
+- **Discipline Area**: Fundamentos Matemáticos
+- **Summary**: Complexidade temporal e espacial assintótica O(g(n)), classes de complexidade P vs NP.
+- **Rigorous Definition**: Análise assintótica do custo computacional. É crucial distinguir a fase de treino da fase de inferência (teste): 1) k-NN: Treino O(1) (aprendizagem preguiçosa); Inferência exaustiva O(N*D), reduzível a O(D*log N) com KD-Trees em baixa dimensão. 2) Árvores de Decisão: Treino heurístico guloso O(D*N*log N); Inferência O(profundidade) <= O(log N). A indução exata da árvore de decisão ótima de tamanho mínimo é um problema comprovadamente NP-completo (Hyafil & Rivest, 1976).
+- **Mathematical Formula**: `$f(n) \in \mathcal{O}(g(n)) \iff \exists c > 0, n_0 > 0 : \forall n \ge n_0, |f(n)| \le c |g(n)|$`
+- **Prerequisites (Depends on)**: None (Root Foundation)
+- **Leads to (Used in)**: None (Terminal Application)
+- **Topological Study Path (Kahn Sort)**: `computational_complexity`
+- **Canonical References**: Cormen et al.: Cap. 3; Murty & Devi: Cap. 1
+- **Implementation (python - illustrative_snippet)**:
+```python
+# Análise comparativa de complexidade em Python:
+# Treino KNN vs Árvore:
+# KNN: fit() armazena referências aos arrays -> O(1)
+# DecisionTree: fit() ordena atributos e avalia splits -> O(D * N * log(N))
+# Inferência:
+# KNN: predict() calcula distâncias a N pontos -> O(N * D)
+# DecisionTree: predict() desce nós da árvore -> O(profundidade) <= O(log N)
+```
+
+---
+
+### `convex_optimization`: Otimização Convexa & Teoria de Lagrange [Level 0 | Domain: foundations | foundation]
+- **Discipline Area**: Fundamentos Matemáticos
+- **Summary**: Gradiente descendente, matriz Hessiana, multiplicadores de Lagrange e condições KKT.
+- **Rigorous Definition**: Minimização de funções convexas em conjuntos convexos. A convexidade assegura que todo o mínimo local é global. Sob condições de qualificação de restrições (Slater), as condições de Karush-Kuhn-Tucker (KKT) de estacionaridade, viabilidade primal, viabilidade dual e folga complementar fornecem condições necessárias e suficientes para a otimalidade global (SVM e regressão logística).
+- **Mathematical Formula**: `$\mathcal{L}(w, \alpha) = f(w) + \sum_{i=1}^m \alpha_i g_i(w), \quad \text{KKT: } \nabla f(w) + \sum \alpha_i \nabla g_i(w) = 0, \quad \alpha_i \ge 0, \quad g_i(w) \le 0, \quad \alpha_i g_i(w) = 0$`
+- **Prerequisites (Depends on)**: None (Root Foundation)
+- **Leads to (Used in)**: `statistical_learning_theory`, `loss_functions_mle`, `gmm_em_algorithm`, `linear_logistic_regression`, `svm_max_margin`, `perceptron_rosenblatt`, `backpropagation_algorithm`, `genetic_algorithms`, `swarm_pso`, `bellman_equations`
+- **Topological Study Path (Kahn Sort)**: `convex_optimization`
+- **Interactive Simulator**: Descida de Gradiente & Taxa de Aprendizagem eta (`gradient_descent`)
+- **Canonical References**: Bishop: Apêndice E; Hastie: Cap. 12.2; Murty & Devi: Cap. 4
+- **Implementation (python - executable_example)**:
+```python
+from scipy.optimize import minimize
+res = minimize(fun, x0, method="BFGS")
+```
+
+---
+
+### `graph_theory_algorithms`: Teoria de Grafos & Estruturas de Árvore [Level 0 | Domain: foundations | foundation]
+- **Discipline Area**: Fundamentos Matemáticos
+- **Summary**: Vértices, arestas, grafos direcionados acíclicos (DAGs), árvores de decisão e travessias BFS/DFS.
+- **Rigorous Definition**: Modelação discreta de relações binárias entre entidades. Em Aprendizagem Computacional, árvores de decisão são árvores enraizadas direcionadas onde nós internos representam testes em atributos e folhas denotam rótulos de classe.
+- **Mathematical Formula**: `$G = (V, E), \quad \text{deg}(v) = |\{e \in E : v \in e\}|, \quad |E| = |V| - 1 \text{ (para árvores)}$`
+- **Prerequisites (Depends on)**: None (Root Foundation)
+- **Leads to (Used in)**: None (Terminal Application)
+- **Topological Study Path (Kahn Sort)**: `graph_theory_algorithms`
+- **Canonical References**: Marques de Sá: Cap. 1
+- **Implementation (python - executable_example)**:
+```python
+import networkx as nx
+G = nx.DiGraph()
+G.add_edge('Root', 'Child_Left')
+```
+
+---
+
+### `inductive_logic`: Lógica Indutiva & Teoria de Grafos [Level 0 | Domain: foundations | foundation]
+- **Discipline Area**: Fundamentos Matemáticos
+- **Summary**: Generalização indutiva, cláusulas de Horn, grafos acíclicos dirigidos (DAGs) e regras IF-THEN.
+- **Rigorous Definition**: Raciocínio que parte de observações particulares para generalizações universais. Modela a construção de árvores de decisão e sistemas de regras conexionistas e simbólicos.
+- **Mathematical Formula**: `$\text{Premissa}_1 \land \text{Premissa}_2 \dots \implies \text{Conclusão}$`
+- **Prerequisites (Depends on)**: None (Root Foundation)
+- **Leads to (Used in)**: `decision_trees_id3`, `sequential_covering`, `association_rules_apriori`, `ai_paradigms_symbolic`
+- **Topological Study Path (Kahn Sort)**: `inductive_logic`
+- **Canonical References**: Flach: Cap. 5; Gama: Cap. 6
+- **Implementation (python - executable_example)**:
+```python
+# Representação indutiva de regra de decisão:
+class InductiveRule:
+    def __init__(self, feature, threshold, prediction):
+        self.feature = feature
+        self.threshold = threshold
+        self.prediction = prediction
+    def evaluate(self, x):
+        return self.prediction if x[self.feature] <= self.threshold else None
+```
+
+---
+
+### `linear_algebra_spectral`: Álgebra Linear & Teoria Espectral [Level 0 | Domain: foundations | foundation]
+- **Discipline Area**: Fundamentos Matemáticos
+- **Summary**: Espaços vetoriais, produto interno, normas L1/L2, valores e vetores próprios, decomposição SVD.
+- **Rigorous Definition**: Estrutura matemática onde instâncias são vetores em R^d e matrizes representam operadores e covariâncias. A teoria espectral permite diagonalizar matrizes de covariância simétricas, revelando os eixos de máxima variância.
+- **Mathematical Formula**: `$\mathbf{A}\mathbf{v} = \lambda \mathbf{v}, \quad \mathbf{X} = \mathbf{U} \mathbf{\Sigma} \mathbf{V}^T, \quad \|\mathbf{x}\|_2 = \sqrt{\mathbf{x}^T\mathbf{x}}$`
+- **Prerequisites (Depends on)**: None (Root Foundation)
+- **Leads to (Used in)**: `metric_spaces`, `feature_space`, `kmeans_clustering`, `pca_dimensionality`, `kernel_trick`, `perceptron_rosenblatt`, `transformers_self_attention`
+- **Topological Study Path (Kahn Sort)**: `linear_algebra_spectral`
+- **Canonical References**: Bishop: Apêndice C; Hastie: Cap. 14.5; Duda: Apêndice A; Programa: Conhecimentos Base
+- **Implementation (python - executable_example)**:
+```python
+import numpy as np
+evals, evecs = np.linalg.eigh(cov_matrix)
+```
+
+---
+
+### `multivariable_calculus`: Cálculo Multivariável & Matrizes Hessianas [Level 0 | Domain: foundations | foundation]
+- **Discipline Area**: Fundamentos Matemáticos
+- **Summary**: Derivadas parciais, vetor gradiente ∇f, matriz Jacobiana e matriz Hessiana ∇²f.
+- **Rigorous Definition**: Fundamento matemático para o treino de modelos de aprendizagem contínua. O gradiente aponta na direção de máximo crescimento da função de perda; a Hessiana avalia a curvatura e convexidade local, essencial para métodos de segunda ordem (Newton-Raphson, BFGS).
+- **Mathematical Formula**: `$\nabla f(\mathbf{x}) = \left[ \frac{\partial f}{\partial x_1}, \dots, \frac{\partial f}{\partial x_d} \right]^T, \quad \mathbf{H}_{ij} = \frac{\partial^2 f}{\partial x_i \partial x_j}$`
+- **Prerequisites (Depends on)**: None (Root Foundation)
+- **Leads to (Used in)**: `swarm_pso`, `diffusion_models`
+- **Topological Study Path (Kahn Sort)**: `multivariable_calculus`
+- **Interactive Simulator**: Gradiente e Curvatura da Matriz Hessiana (`gradient_descent`)
+- **Canonical References**: Bishop: Apêndice D; Marques de Sá: Cap. 2
+- **Implementation (sympy - executable_example)**:
+```sympy
+import sympy as sp
+x, y = sp.symbols('x y')
+f = x**2 + 3*y**2 - 2*x*y
+grad = [sp.diff(f, var) for var in (x, y)]
+hess = sp.hessian(f, (x, y))
+```
+
+---
+
+### `prob_theory`: Teoria das Probabilidades & Distribuições [Level 0 | Domain: foundations | foundation]
+- **Discipline Area**: Fundamentos Matemáticos
+- **Summary**: Axiomas de Kolmogorov, probabilidades conjuntas, marginais e condicionais P(A|B).
+- **Rigorous Definition**: Axiomatização formal de Kolmogorov sobre um espaço mensurável (Omega, F, P). Modela variáveis aleatórias discretas e contínuas, densidades de probabilidade conjuntas p(x,y), probabilidades condicionais e distribuições Gaussianas multivariadas que sustentam a inferência em Machine Learning.
+- **Mathematical Formula**: `$P(A|B) = \frac{P(A \cap B)}{P(B)}, \quad \sum_{i} P(A_i) = 1 \text{ (onde } \{A_i\} \text{ constitui partição disjunta de } \Omega), \quad \mathbb{E}[X] = \int x p(x) dx$`
+- **Prerequisites (Depends on)**: None (Root Foundation)
+- **Leads to (Used in)**: `shannon_info`, `statistical_learning_theory`, `target_variable`, `loss_functions_mle`, `gmm_em_algorithm`, `naive_bayes_models`, `association_rules_apriori`, `bayesian_inference_mle`, `genetic_algorithms`, `markov_decision_process`, `diffusion_models`
+- **Topological Study Path (Kahn Sort)**: `prob_theory`
+- **Interactive Simulator**: Probabilidades Condicionais & Regra do Produto (`bayesian_inference`)
+- **Canonical References**: Bishop: Cap. 1.2; Hastie: Cap. 2.6; Marques de Sá: Cap. 2; Programa: Conhecimentos Base
+- **Implementation (python - executable_example)**:
+```python
+import scipy.stats as stats
+norm_dist = stats.norm(loc=0, scale=1)
+```
+
+---
+
+### `ai_paradigms_symbolic`: Paradigma Simbólico & Raciocínio Dedutivo (GOFAI) [Level 1 | Domain: masters_ai | rule_based]
+- **Discipline Area**: Paradigmas de Inteligência Artificial
+- **Summary**: Sistemas baseados em conhecimento explícito, ontologias formais e inferência lógica determinística.
+- **Rigorous Definition**: Primeiro grande paradigma da inteligência artificial. Caracteriza-se pela manipulação deliberada de símbolos representacionais através de regras lógicas rigorosas. Altamente interpretável e determinístico, mas frágil perante ruído estatístico e dados não-estruturados.
+- **Mathematical Formula**: `$\text{Se } \alpha \to \beta \text{ e } \alpha \text{ é verdadeiro, então } \beta \text{ é derivado (Modus Ponens)}$`
+- **Prerequisites (Depends on)**: `inductive_logic`
+- **Leads to (Used in)**: `ai_neurosymbolic_hybrid`
+- **Topological Study Path (Kahn Sort)**: `inductive_logic` -> `ai_paradigms_symbolic`
+- **Canonical References**: Russell & Norvig: Cap. 7-9
+- **Implementation (python - illustrative_snippet)**:
+```python
+# Representação de regras simbólicas: IF feature_A AND feature_B THEN class_C
+```
+
+---
+
+### `association_rules_apriori`: Regras de Associação & Algoritmo Apriori [Level 1 | Domain: academic_ml | rule_based]
+- **Discipline Area**: Aprendizagem Computacional
+- **Summary**: Mineração de padrões frequentes X => Y com medidas de Suporte, Confiança e Lift.
+- **Rigorous Definition**: Criado por Agrawal e Srikant (1994). O princípio Apriori afirma que qualquer subconjunto de um itemset frequente deve ser também frequente (propriedade anti-monotónica). Permite podar o espaço de busca combinatório.
+- **Mathematical Formula**: `$\text{Supp}(X \Rightarrow Y) = P(X \cup Y), \quad \text{Conf}(X \Rightarrow Y) = \frac{P(X \cup Y)}{P(X)}, \quad \text{Lift} = \frac{P(X \cup Y)}{P(X)P(Y)}$`
+- **Prerequisites (Depends on)**: `inductive_logic`, `prob_theory`
+- **Leads to (Used in)**: None (Terminal Application)
+- **Topological Study Path (Kahn Sort)**: `prob_theory` -> `inductive_logic` -> `association_rules_apriori`
+- **Canonical References**: Hastie: Cap. 14.2; Gama: Cap. 5; Flach: Cap. 10
+- **Implementation (python - executable_example)**:
+```python
+from mlxtend.frequent_patterns import apriori, association_rules
+frequent_itemsets = apriori(df, min_support=0.05, use_colnames=True)
+```
+
+---
+
+### `bayesian_inference_mle`: Inferência Bayesiana & Máxima Verossimilhança (MLE / MAP) [Level 1 | Domain: foundations | foundation]
+- **Discipline Area**: Fundamentos Matemáticos
+- **Summary**: Estimador de Máxima Verossimilhança (MLE), Estimador Máximo a Posteriori (MAP) e Teorema de Bayes.
+- **Rigorous Definition**: Princípio probabilístico central da aprendizagem de parâmetros. O MLE maximiza a probabilidade dos dados observados dado o modelo P(D|theta); o MAP incorpora uma distribuição a priori sobre os parâmetros P(theta), atuando matematicamente como um regularizador.
+- **Mathematical Formula**: `$\hat{\theta}_{\text{MLE}} = \arg\max_\theta \sum_{i=1}^N \ln p(x_i | \theta), \quad \hat{\theta}_{\text{MAP}} = \arg\max_\theta [\ln p(D | \theta) + \ln p(\theta)]$`
+- **Prerequisites (Depends on)**: `prob_theory`
+- **Leads to (Used in)**: `variational_autoencoders`
+- **Topological Study Path (Kahn Sort)**: `prob_theory` -> `bayesian_inference_mle`
+- **Interactive Simulator**: Teorema de Bayes: Priori, Verossimilhança e Posteriori (`bayesian_inference`)
+- **Canonical References**: Bishop: Cap. 1.2 & 2.3; Hastie: Cap. 8.2; Duda: Cap. 3
+- **Implementation (python - executable_example)**:
+```python
+import numpy as np
+# MLE de mu e sigma para normal
+mu_mle = np.mean(data)
+sigma_mle = np.std(data)
+```
+
+---
+
+### `feature_space`: Espaço de Atributos & Tipologia de Dados [Level 1 | Domain: academic_ml | ml_core]
+- **Discipline Area**: Aprendizagem Computacional
+- **Summary**: Matriz de dados X, variáveis quantitativas (contínuas/discretas) e qualitativas (nominais/ordinais).
+- **Rigorous Definition**: Representação vetorial das instâncias. Cada linha é uma amostra x_i in R^d e cada coluna representa uma dimensão de observação com características de distribuição próprias.
+- **Mathematical Formula**: `$\mathbf{X} \in \mathbb{R}^{N \times d}, \quad \mathbf{x}_i = [x_{i1}, x_{i2}, \dots, x_{id}]^T$`
+- **Prerequisites (Depends on)**: `linear_algebra_spectral`
+- **Leads to (Used in)**: `eda_exploration`, `data_cleaning_imputation`, `feature_scaling_norm`, `dataset_split_leakage`, `decision_trees_id3`, `sequential_covering`
+- **Topological Study Path (Kahn Sort)**: `linear_algebra_spectral` -> `feature_space`
+- **Canonical References**: Bishop: Cap. 1.1; Flach: Cap. 1
+- **Implementation (python - illustrative_snippet)**:
+```python
+X = df.iloc[:, :-1].values
+```
+
+---
+
+### `genetic_algorithms`: Algoritmos Genéticos & Computação Evolucionária [Level 1 | Domain: masters_ai | complementary]
+- **Discipline Area**: Computação Bio-Inspirada & Otimização
+- **Summary**: Otimização estocástica baseada em seleção natural, cruzamento (crossover) e mutação genética.
+- **Rigorous Definition**: Algoritmo bio-inspirado para busca e otimização global em espaços não-convexos, descontínuos ou com múltiplos ótimos locais. Mantém uma população de candidatos (cromossomas), seleciona os mais aptos através de uma função de fitness e recombina informação genética.
+- **Mathematical Formula**: `$P(\text{selecionar } i) = \frac{f_i}{\sum_{j=1}^{M} f_j} \quad (\text{Seleção por Roleta})$`
+- **Prerequisites (Depends on)**: `convex_optimization`, `prob_theory`
+- **Leads to (Used in)**: None (Terminal Application)
+- **Topological Study Path (Kahn Sort)**: `convex_optimization` -> `prob_theory` -> `genetic_algorithms`
+- **Canonical References**: Eiben & Smith: Introduction to Evolutionary Computing
+- **Implementation (python - illustrative_snippet)**:
+```python
+# Algoritmo de cruzamento e mutação estocástica com probabilidade p_mut = 0.05
+```
+
+---
+
+### `gmm_em_algorithm`: Modelos de Mistura Gaussiana (GMM) & Algoritmo EM [Level 1 | Domain: academic_ml | unsupervised]
+- **Discipline Area**: Aprendizagem Computacional
+- **Summary**: Agrupamento probabilístico suave (Soft Clustering) via Expectation-Maximization (EM).
+- **Rigorous Definition**: Assume que os dados são gerados por uma combinação linear de K distribuições normais multivariadas com médias e matrizes de covariância próprias. O algoritmo EM estima iterativamente as responsabilidades (Passo E) e os parâmetros gaussianos (Passo M).
+- **Mathematical Formula**: `$p(\mathbf{x}) = \sum_{k=1}^K \pi_k \mathcal{N}(\mathbf{x} \mid \boldsymbol{\mu}_k, \boldsymbol{\Sigma}_k), \quad \gamma_{ik} = \frac{\pi_k \mathcal{N}(\mathbf{x}_i \mid \boldsymbol{\mu}_k, \boldsymbol{\Sigma}_k)}{\sum_j \pi_j \mathcal{N}(\mathbf{x}_i \mid \boldsymbol{\mu}_j, \boldsymbol{\Sigma}_j)}$`
+- **Prerequisites (Depends on)**: `prob_theory`, `convex_optimization`
+- **Leads to (Used in)**: None (Terminal Application)
+- **Topological Study Path (Kahn Sort)**: `convex_optimization` -> `prob_theory` -> `gmm_em_algorithm`
+- **Canonical References**: Bishop: Cap. 9.2-9.4; Hastie: Cap. 8.5; Duda: Cap. 10.4
+- **Implementation (scikit-learn - executable_example)**:
+```scikit-learn
+from sklearn.mixture import GaussianMixture
+gmm = GaussianMixture(n_components=3, covariance_type="full").fit(X)
+```
+
+---
+
+### `markov_decision_process`: Processos de Decisão de Markov (MDP) [Level 1 | Domain: masters_ai | foundation]
+- **Discipline Area**: Aprendizagem Computacional
+- **Summary**: Quadro formal para tomada de decisão sequencial em ambientes estocásticos com propriedade de Markov.
+- **Rigorous Definition**: Tupla fundamental (S, A, P, R, gamma). A propriedade de Markov postula que a probabilidade do próximo estado depende exclusivamente do estado presente e da ação tomada, sendo independente de todo o histórico pregresso.
+- **Mathematical Formula**: `$P(S_{t+1}=s', R_{t+1}=r \mid S_t=s_t, A_t=a_t, \dots, S_0=s_0) = P(S_{t+1}=s', R_{t+1}=r \mid S_t=s, A_t=a)$`
+- **Prerequisites (Depends on)**: `prob_theory`
+- **Leads to (Used in)**: `bellman_equations`
+- **Topological Study Path (Kahn Sort)**: `prob_theory` -> `markov_decision_process`
+- **Canonical References**: Sutton & Barto: Reinforcement Learning, Cap. 3
+- **Implementation (python - illustrative_snippet)**:
+```python
+# Definição da matriz de transição de estados P[s, a, s'] e função de recompensa R[s, a]
+```
+
+---
+
+### `metric_spaces`: Geometria Métrica & Análise de Proximidade [Level 1 | Domain: foundations | foundation]
+- **Discipline Area**: Fundamentos Matemáticos
+- **Summary**: Espaços métricos, normas Lp (Euclidiana, Manhattan, Minkowski), desigualdade triangular.
+- **Rigorous Definition**: Espaço métrico (M, d) onde a distância satisfaz: 1) d(x,y) >= 0; 2) d(x,y) = 0 <=> x=y; 3) d(x,y) = d(y,x); 4) d(x,z) <= d(x,y) + d(y,z) (desigualdade triangular). A condição p >= 1 é mandatória para garantir a desigualdade triangular via desigualdade de Minkowski. Em alta dimensão (Aggarwal et al., 2001), a métrica Manhattan (L1) degrada o contraste de distâncias mais lentamente do que a Euclidiana (L2).
+- **Mathematical Formula**: `$d_p(\mathbf{u}, \mathbf{v}) = \left( \sum_{i=1}^d |u_i - v_i|^p \right)^{1/p} \quad (p \ge 1 \text{ para validade métrica de Minkowski})$`
+- **Prerequisites (Depends on)**: `linear_algebra_spectral`
+- **Leads to (Used in)**: `feature_scaling_norm`, `kmeans_clustering`, `hierarchical_clustering`, `dbscan_density`, `knn_algorithm`, `svm_max_margin`
+- **Topological Study Path (Kahn Sort)**: `linear_algebra_spectral` -> `metric_spaces`
+- **Interactive Simulator**: Normas de Distância L1, L2 e L_infinito (`knn_spatial`)
+- **Canonical References**: Marques de Sá: Cap. 3; Murty & Devi: Cap. 2; Duda: Cap. 4
+- **Implementation (python - executable_example)**:
+```python
+from scipy.spatial.distance import cdist
+D = cdist(X, X, metric="euclidean")
+```
+
+---
+
+### `pca_dimensionality`: Análise de Componentes Principais (PCA) & SVD [Level 1 | Domain: academic_ml | unsupervised]
+- **Discipline Area**: Aprendizagem Computacional
+- **Summary**: Projeção linear ortogonal que maximiza a variância preservada e descarta redundância correlacionada.
+- **Rigorous Definition**: Encontra uma base ortonormal cujos vetores (componentes principais) apontam para as direções de máxima dispersão dos dados. Matematicamente, corresponde aos autovetores da matriz de covariância amostral ou à decomposição SVD de X centrado.
+- **Mathematical Formula**: `$\mathbf{C} = \frac{1}{N} \mathbf{X}^T \mathbf{X}, \quad \mathbf{C}\mathbf{v}_i = \lambda_i \mathbf{v}_i, \quad \mathbf{Z} = \mathbf{X} \mathbf{V}_k$`
+- **Prerequisites (Depends on)**: `linear_algebra_spectral`
+- **Leads to (Used in)**: None (Terminal Application)
+- **Topological Study Path (Kahn Sort)**: `linear_algebra_spectral` -> `pca_dimensionality`
+- **Canonical References**: Bishop: Cap. 12.1; Hastie: Cap. 14.5; Marques de Sá: Cap. 5; Müller & Guido: Cap. 3.4
+- **Implementation (scikit-learn - executable_example)**:
+```scikit-learn
+from sklearn.decomposition import PCA
+pca = PCA(n_components=2)
+X_pca = pca.fit_transform(X_scaled)
+```
+
+---
+
+### `perceptron_rosenblatt`: O Perceptron de Rosenblatt & Separabilidade Linear [Level 1 | Domain: academic_ml | connectionist]
+- **Discipline Area**: Aprendizagem Computacional
+- **Summary**: Primeiro modelo conexionista com regra de atualização de pesos Hebbiana e limitação XOR.
+- **Rigorous Definition**: Desenvolvido por Frank Rosenblatt (1958). Classificador linear bio-inspirado com função de ativação em degrau. O Teorema da Convergência do Perceptron prova que, se os dados forem linearmente separáveis, o algoritmo converge num número finito de passos.
+- **Mathematical Formula**: `$\hat{y} = \text{step}(\mathbf{w}^T \mathbf{x} + b), \quad \mathbf{w}^{(t+1)} = \mathbf{w}^{(t)} + \eta (y_i - \hat{y}_i) \mathbf{x}_i$`
+- **Prerequisites (Depends on)**: `linear_algebra_spectral`, `convex_optimization`
+- **Leads to (Used in)**: `mlp_neural_networks`
+- **Topological Study Path (Kahn Sort)**: `linear_algebra_spectral` -> `convex_optimization` -> `perceptron_rosenblatt`
+- **Interactive Simulator**: Limiar de Heaviside vs Sigmóide Suave (`neural_activations`)
+- **Canonical References**: Bishop: Cap. 4.1.7; Hastie: Cap. 11.2; Duda: Cap. 5.4; Marques de Sá: Cap. 6
+- **Implementation (scikit-learn - executable_example)**:
+```scikit-learn
+from sklearn.linear_model import Perceptron
+perc = Perceptron(max_iter=1000).fit(X_tr, y_tr)
+```
+
+---
+
+### `shannon_info`: Teoria da Informação de Shannon [Level 1 | Domain: foundations | foundation]
+- **Discipline Area**: Fundamentos Matemáticos
+- **Summary**: Medida da incerteza esperada em bits (base 2). Fundamento dos critérios de pureza indutiva em árvores de decisão.
+- **Rigorous Definition**: Quantificação rigorosa do conteúdo informacional e incerteza associada a variáveis aleatórias. A entropia de Shannon define o limite fundamental de compressão e serve de critério de pureza para indução de árvores e funções de perda logarítmicas.
+- **Mathematical Formula**: `$H(X) = - \sum_{i=1}^n P(x_i) \log_2 P(x_i) \text{ (bits)}, \quad D_{\text{KL}}(P \parallel Q) = \sum_{x} P(x) \log_2 \frac{P(x)}{Q(x)}$`
+- **Prerequisites (Depends on)**: `prob_theory`
+- **Leads to (Used in)**: `decision_trees_id3`, `variational_autoencoders`
+- **Topological Study Path (Kahn Sort)**: `prob_theory` -> `shannon_info`
+- **Interactive Simulator**: Entropia de Shannon H(p) (`entropy_gain`)
+- **Canonical References**: Bishop: Cap. 1.6; Flach: Cap. 2
+- **Implementation (python - executable_example)**:
+```python
+import numpy as np
+def kl_div(p, q): return np.sum(np.where(p != 0, p * np.log(p / q), 0))
+```
+
+---
+
+### `statistical_learning_theory`: Teoria da Aprendizagem Estatística & Dimensão VC [Level 1 | Domain: foundations | foundation]
+- **Discipline Area**: Fundamentos Matemáticos
+- **Summary**: Minimização do Risco Empírico (ERM), Risco Estrutural (SRM), Dimensão VC e PAC-Learning.
+- **Rigorous Definition**: Desenvolvida por Vladimir Vapnik. Fornece garantias matemáticas teóricas de generalização: o erro no teste é limitado superiormente pelo erro de treino somado a um termo que depende da capacidade do modelo (Dimensão VC).
+- **Mathematical Formula**: `$R(h) \le R_{\text{emp}}(h) + \sqrt{\frac{h_{\text{VC}} (\ln(2N/h_{\text{VC}}) + 1) - \ln(\delta/4)}{N}}$`
+- **Prerequisites (Depends on)**: `prob_theory`, `convex_optimization`
+- **Leads to (Used in)**: `bias_variance_tradeoff`, `no_free_lunch`, `svm_max_margin`, `model_interpretability_shap`
+- **Topological Study Path (Kahn Sort)**: `convex_optimization` -> `prob_theory` -> `statistical_learning_theory`
+- **Interactive Simulator**: Dimensão VC & Margem de Generalização (`svm_margin`)
+- **Canonical References**: Hastie: Cap. 7; Flach: Cap. 1; Duda: Cap. 9
+- **Implementation (python - executable_example)**:
+```python
+import numpy as np
+# Limite superior do Erro de Generalização (Vapnik-Chervonenkis):
+def vc_generalization_bound(r_emp, vc_dim, n, delta=0.05):
+    penalty = np.sqrt((vc_dim * (np.log(2 * n / vc_dim) + 1) - np.log(delta / 4)) / n)
+    return r_emp + penalty
+bound = vc_generalization_bound(r_emp=0.02, vc_dim=5, n=1000)
+```
+
+---
+
+### `swarm_pso`: Otimização por Enxame de Partículas (PSO) [Level 1 | Domain: masters_ai | complementary]
+- **Discipline Area**: Computação Bio-Inspirada & Otimização
+- **Summary**: Dinâmica coletiva de partículas guiadas pelas suas melhores posições individuais e pelo melhor global.
+- **Rigorous Definition**: Meta-heurística inspirada no comportamento de bandos de aves e cardumes de peixes. Cada partícula navega no espaço de busca ajustando a sua velocidade com base na sua inércia, na sua memória pessoal (pbest) e no conhecimento coletivo do enxame (gbest).
+- **Mathematical Formula**: `$\mathbf{v}_i^{(t+1)} = w \mathbf{v}_i^{(t)} + c_1 r_1 (\mathbf{p}_i - \mathbf{x}_i^{(t)}) + c_2 r_2 (\mathbf{g} - \mathbf{x}_i^{(t)})$`
+- **Prerequisites (Depends on)**: `multivariable_calculus`, `convex_optimization`
+- **Leads to (Used in)**: None (Terminal Application)
+- **Topological Study Path (Kahn Sort)**: `convex_optimization` -> `multivariable_calculus` -> `swarm_pso`
+- **Canonical References**: Kennedy & Eberhart (1995): Particle Swarm Optimization
+- **Implementation (python - illustrative_snippet)**:
+```python
+# Atualização vetorial da velocidade e posição de partículas em R^d
+```
+
+---
+
+### `target_variable`: Variável Alvo & Formulação do Problema [Level 1 | Domain: academic_ml | ml_core]
+- **Discipline Area**: Aprendizagem Computacional
+- **Summary**: Vetor y de respostas: Classes discretas (Classificação) ou Variável contínua (Regressão).
+- **Rigorous Definition**: Variável supervisionada a prever. Na classificação binária y in {-1, +1} ou {0, 1}; na multi-classe y in {1, ..., K}; na regressão y in R.
+- **Mathematical Formula**: `$y \in \mathcal{Y}, \quad \mathcal{Y} = \{c_1, \dots, c_K\} \text{ ou } \mathbb{R}$`
+- **Prerequisites (Depends on)**: `prob_theory`
+- **Leads to (Used in)**: `loss_functions_mle`, `eda_exploration`, `dataset_split_leakage`, `confusion_matrix_metrics`, `naive_bayes_models`, `sequential_covering`
+- **Topological Study Path (Kahn Sort)**: `prob_theory` -> `target_variable`
+- **Canonical References**: Hastie: Cap. 2.2; Bishop: Cap. 1.1
+- **Implementation (python - illustrative_snippet)**:
+```python
+y = df["target"].values
+```
+
+---
+
+### `bellman_equations`: Equações de Bellman & Programação Dinâmica [Level 2 | Domain: masters_ai | metrics]
+- **Discipline Area**: Aprendizagem Computacional
+- **Summary**: Decomposição recursiva do valor de um estado ou par estado-ação em recompensa imediata e valor futuro.
+- **Rigorous Definition**: O alicerce matemático da aprendizagem por reforço. Demonstra que o valor ótimo de um estado satisfaz uma equação de ponto fixo sob o operador de Bellman, permitindo encontrar a política ótima via Value Iteration ou Policy Iteration.
+- **Mathematical Formula**: `$V^*(s) = \max_{a \in A} \left[ R(s, a) + \gamma \sum_{s'} P(s' \mid s, a) V^*(s') \right]$`
+- **Prerequisites (Depends on)**: `markov_decision_process`, `convex_optimization`
+- **Leads to (Used in)**: `q_learning_td`
+- **Topological Study Path (Kahn Sort)**: `convex_optimization` -> `prob_theory` -> `markov_decision_process` -> `bellman_equations`
+- **Canonical References**: Sutton & Barto: Cap. 4; Bellman (1957)
+- **Implementation (python - illustrative_snippet)**:
+```python
+# Iteração de valor: V(s) = max_a sum(P*(R + gamma*V_old))
+```
+
+---
+
+### `data_cleaning_imputation`: Limpeza de Dados, Imputação & Outliers [Level 2 | Domain: academic_ml | preprocessing]
+- **Discipline Area**: Aprendizagem Computacional
+- **Summary**: Tratamento de dados ausentes (MCAR, MAR, MNAR) e deteção de anomalias (z-score, IQR, Isolation Forest).
+- **Rigorous Definition**: Dados ausentes comprometem o cálculo matricial. Estratégias: remoção por lista (*listwise deletion*), imputação por média/mediana, moda categórica, imputação k-NN ou por regressão iteratively chained.
+- **Mathematical Formula**: `$\text{IQR} = Q_3 - Q_1, \quad [Q_1 - 1.5\text{IQR}, \, Q_3 + 1.5\text{IQR}]$`
+- **Prerequisites (Depends on)**: `feature_space`
+- **Leads to (Used in)**: None (Terminal Application)
+- **Topological Study Path (Kahn Sort)**: `linear_algebra_spectral` -> `feature_space` -> `data_cleaning_imputation`
+- **Canonical References**: Gama: Cap. 3; Müller & Guido: Cap. 3
+- **Implementation (scikit-learn - executable_example)**:
+```scikit-learn
+from sklearn.impute import SimpleImputer, KNNImputer
+imputer = KNNImputer(n_neighbors=5)
+X_clean = imputer.fit_transform(X)
+```
+
+---
+
+### `dataset_split_leakage`: Partição de Dados & Prevenção de Data Leakage [Level 2 | Domain: academic_ml | preprocessing]
+- **Discipline Area**: Aprendizagem Computacional
+- **Summary**: Divisão estrita Train / Validation / Test e encapsulamento em Scikit-Learn Pipelines.
+- **Rigorous Definition**: Data Leakage ocorre quando informação do conjunto de teste contamina o processo de treino (ex: calcular a média do scaler sobre todo o dataset antes da partição). Pipelines garantem que transformações aprendem apenas com o treino.
+- **Mathematical Formula**: `$D = D_{\text{train}} \cup D_{\text{val}} \cup D_{\text{test}}, \quad \text{Fit}(\mathcal{T}, D_{\text{train}}) \rightarrow \text{Transform}(D_{\text{test}})$`
+- **Prerequisites (Depends on)**: `feature_space`, `target_variable`
+- **Leads to (Used in)**: `cross_validation_kfold`, `confusion_matrix_metrics`
+- **Topological Study Path (Kahn Sort)**: `prob_theory` -> `linear_algebra_spectral` -> `target_variable` -> `feature_space` -> `dataset_split_leakage`
+- **Canonical References**: Bishop: Pattern Recognition and Machine Learning; Hastie et al.: Elements of Statistical Learning.
+- **Implementation (scikit-learn - executable_example)**:
+```scikit-learn
+from sklearn.pipeline import Pipeline
+pipe = Pipeline([("scaler", StandardScaler()), ("clf", DecisionTreeClassifier())])
+```
+
+---
+
+### `dbscan_density`: DBSCAN: Agrupamento Baseado em Densidade [Level 2 | Domain: academic_ml | unsupervised]
+- **Discipline Area**: Aprendizagem Computacional
+- **Summary**: Identificação de aglomerados de forma arbitrária e filtragem automática de ruído (Eps, MinPts).
+- **Rigorous Definition**: Density-Based Spatial Clustering of Applications with Noise (Ester et al., 1996). Classifica pontos como Core, Border ou Noise consoante possuam pelo menos MinPts vizinhos num raio epsilon. Não exige pré-especificar K.
+- **Mathematical Formula**: `$N_\epsilon(p) = \{q \in D \mid d(p, q) \le \epsilon\}, \quad |N_\epsilon(p)| \ge \text{MinPts}$`
+- **Prerequisites (Depends on)**: `metric_spaces`
+- **Leads to (Used in)**: None (Terminal Application)
+- **Topological Study Path (Kahn Sort)**: `linear_algebra_spectral` -> `metric_spaces` -> `dbscan_density`
+- **Canonical References**: Müller & Guido: Cap. 3.5.3; Gama: Cap. 8
+- **Implementation (scikit-learn - executable_example)**:
+```scikit-learn
+from sklearn.cluster import DBSCAN
+db = DBSCAN(eps=0.5, min_samples=5).fit(X)
+```
+
+---
+
+### `decision_trees_id3`: Árvores de Decisão & Algoritmo ID3 [Level 2 | Domain: academic_ml | non_connectionist]
+- **Discipline Area**: Aprendizagem Computacional
+- **Summary**: Partição recursiva divide-and-conquer baseada em Entropia e Ganho de Informação.
+- **Rigorous Definition**: Proposto por Ross Quinlan. Constrói uma árvore de decisão de cima para baixo (top-down) selecionando em cada nó o atributo que maximiza o Ganho de Informação (redução da entropia de Shannon).
+- **Mathematical Formula**: `$Gain(S, A) = H(S) - \sum_{v \in \text{Values}(A)} \frac{|S_v|}{|S|} H(S_v), \quad H(S) = -\sum p_i \log_2 p_i$`
+- **Prerequisites (Depends on)**: `shannon_info`, `inductive_logic`, `feature_space`
+- **Leads to (Used in)**: `decision_trees_c45_cart`
+- **Topological Study Path (Kahn Sort)**: `prob_theory` -> `linear_algebra_spectral` -> `inductive_logic` -> `shannon_info` -> `feature_space` -> `decision_trees_id3`
+- **Interactive Simulator**: Indução ID3 & Pureza de Shannon (`entropy_gain`)
+- **Canonical References**: Mitchell: Cap. 3; Flach: Cap. 5
+- **Implementation (scikit-learn - executable_example)**:
+```scikit-learn
+from sklearn.tree import DecisionTreeClassifier
+clf = DecisionTreeClassifier(criterion="entropy")
+```
+
+---
+
+### `eda_exploration`: Análise Exploratória & Estatística Descritiva (EDA) [Level 2 | Domain: academic_ml | preprocessing]
+- **Discipline Area**: Aprendizagem Computacional
+- **Summary**: Medidas de tendência central, dispersão, assimetria, matrizes de correlação e visualizações Seaborn.
+- **Rigorous Definition**: Inspeção profunda da estrutura estatística dos dados antes de qualquer modelação. Identifica desbalanceamentos, variáveis redundantes e correlações espúrias.
+- **Mathematical Formula**: `$r_{jk} = \frac{\sum_{i} (x_{ij} - \bar{x}_j)(x_{ik} - \bar{x}_k)}{\sqrt{\sum (x_{ij} - \bar{x}_j)^2 \sum (x_{ik} - \bar{x}_k)^2}}$`
+- **Prerequisites (Depends on)**: `feature_space`, `target_variable`
+- **Leads to (Used in)**: None (Terminal Application)
+- **Topological Study Path (Kahn Sort)**: `prob_theory` -> `linear_algebra_spectral` -> `target_variable` -> `feature_space` -> `eda_exploration`
+- **Canonical References**: Müller & Guido: Cap. 1
+- **Implementation (python - executable_example)**:
+```python
+import seaborn as sns
+sns.pairplot(df, hue="target")
+```
+
+---
+
+### `feature_scaling_norm`: Normalização & Padronização de Escala [Level 2 | Domain: academic_ml | preprocessing]
+- **Discipline Area**: Aprendizagem Computacional
+- **Summary**: Min-Max Scaling para [0, 1] e Z-score Standardization (média 0, desvio 1).
+- **Rigorous Definition**: Algoritmos que dependem de distâncias (KNN, K-Means, SVM) ou gradientes (Redes, Regressão Logística) são distorcidos se um atributo tiver magnitude numérica superior aos restantes.
+- **Mathematical Formula**: `$x_{\text{MinMax}} = \frac{x - x_{\min}}{x_{\max} - x_{\min}}, \quad x_{\text{Z-score}} = \frac{x - \mu}{\sigma}$`
+- **Prerequisites (Depends on)**: `feature_space`, `metric_spaces`
+- **Leads to (Used in)**: `knn_algorithm`
+- **Topological Study Path (Kahn Sort)**: `linear_algebra_spectral` -> `feature_space` -> `metric_spaces` -> `feature_scaling_norm`
+- **Canonical References**: Müller & Guido: Cap. 3.3
+- **Implementation (scikit-learn - executable_example)**:
+```scikit-learn
+from sklearn.preprocessing import StandardScaler, MinMaxScaler
+scaler = StandardScaler()
+X_tr_scaled = scaler.fit_transform(X_train)
+X_te_scaled = scaler.transform(X_test) # Nunca fit no teste!
+```
+
+---
+
+### `hierarchical_clustering`: Agrupamento Hierárquico (Aglomerativo & Dendrogramas) [Level 2 | Domain: academic_ml | unsupervised]
+- **Discipline Area**: Aprendizagem Computacional
+- **Summary**: Abordagem bottom-up que funde recursivamente clusters segundo critérios de ligação (Single, Complete, Ward).
+- **Rigorous Definition**: Começa com cada ponto no seu próprio cluster. Em cada passo, funde os dois clusters mais próximos de acordo com uma função de ligação (Linkage), construindo um dendrograma que pode ser cortado na granularidade desejada.
+- **Mathematical Formula**: `$d_{\text{Ward}}(A, B) = \frac{|A||B|}{|A|+|B|} \|\boldsymbol{\mu}_A - \boldsymbol{\mu}_B\|^2$`
+- **Prerequisites (Depends on)**: `metric_spaces`
+- **Leads to (Used in)**: None (Terminal Application)
+- **Topological Study Path (Kahn Sort)**: `linear_algebra_spectral` -> `metric_spaces` -> `hierarchical_clustering`
+- **Canonical References**: Hastie: Cap. 14.3.12; Duda: Cap. 10.9; Murty & Devi: Cap. 3
+- **Implementation (python - executable_example)**:
+```python
+from scipy.cluster.hierarchy import dendrogram, linkage
+Z = linkage(X, method="ward")
+```
+
+---
+
+### `kmeans_clustering`: Agrupamento K-Means & Algoritmo de Lloyd [Level 2 | Domain: academic_ml | unsupervised]
+- **Discipline Area**: Aprendizagem Computacional
+- **Summary**: Partição em K clusters minimizando a inércia intra-cluster (Within-Cluster Sum of Squares - WCSS).
+- **Rigorous Definition**: Algoritmo iterativo de particionamento que alterna entre: 1) Atribuição de cada ponto ao centroide mais próximo; 2) Recálculo dos centroides como a média dos pontos atribuídos, até à convergência.
+- **Mathematical Formula**: `$J = \sum_{k=1}^K \sum_{\mathbf{x} \in C_k} \|\mathbf{x} - \boldsymbol{\mu}_k\|^2, \quad \boldsymbol{\mu}_k = \frac{1}{|C_k|} \sum_{\mathbf{x} \in C_k} \mathbf{x}$`
+- **Prerequisites (Depends on)**: `metric_spaces`, `linear_algebra_spectral`
+- **Leads to (Used in)**: None (Terminal Application)
+- **Topological Study Path (Kahn Sort)**: `linear_algebra_spectral` -> `metric_spaces` -> `kmeans_clustering`
+- **Canonical References**: Bishop: Cap. 9.1; Hastie: Cap. 14.3.5; Murty & Devi: Cap. 3; Marques de Sá: Cap. 4
+- **Implementation (scikit-learn - executable_example)**:
+```scikit-learn
+from sklearn.cluster import KMeans
+kmeans = KMeans(n_clusters=3, init="k-means++").fit(X)
+```
+
+---
+
+### `loss_functions_mle`: Funções de Perda & Máxima Verossimilhança (MLE) [Level 2 | Domain: academic_ml | ml_core]
+- **Discipline Area**: Aprendizagem Computacional
+- **Summary**: Zero-One Loss, Mean Squared Error (MSE), Log-Loss (Entropia Cruzada) e princípio de MLE.
+- **Rigorous Definition**: Medida formal de discrepância entre o rótulo real y e a previsão f(x). O princípio da Máxima Verossimilhança demonstra que minimizar a entropia cruzada equivale a maximizar a probabilidade dos dados sob o modelo.
+- **Mathematical Formula**: `$\text{MSE} = \frac{1}{N}\sum (y - \hat{y})^2, \quad \mathcal{L}_{\text{CE}} = -\sum [y \ln \hat{p} + (1-y)\ln(1-\hat{p})]$`
+- **Prerequisites (Depends on)**: `convex_optimization`, `prob_theory`, `target_variable`
+- **Leads to (Used in)**: `bias_variance_tradeoff`, `linear_logistic_regression`, `gradient_boosting`, `model_interpretability_shap`
+- **Topological Study Path (Kahn Sort)**: `convex_optimization` -> `prob_theory` -> `target_variable` -> `loss_functions_mle`
+- **Canonical References**: Bishop: Cap. 1.2.5; Hastie: Cap. 2.4; Duda: Cap. 3.2
+- **Implementation (scikit-learn - executable_example)**:
+```scikit-learn
+from sklearn.metrics import mean_squared_error, log_loss
+```
+
+---
+
+### `mlp_neural_networks`: Perceptron Multi-Camada (MLP) & Arquitetura [Level 2 | Domain: academic_ml | connectionist]
+- **Discipline Area**: Aprendizagem Computacional
+- **Summary**: Camadas densas ocultas interconectadas capazes de aprender representações não lineares complexas.
+- **Rigorous Definition**: Redes neuronais alimentadas para a frente (Feedforward Neural Networks) compostas por uma camada de entrada, uma ou mais camadas ocultas com neurónios não lineares e uma camada de saída.
+- **Mathematical Formula**: `$\mathbf{a}^{(1)} = \sigma(\mathbf{W}^{(1)} \mathbf{x} + \mathbf{b}^{(1)}), \quad \hat{\mathbf{y}} = g(\mathbf{W}^{(2)} \mathbf{a}^{(1)} + \mathbf{b}^{(2)})$`
+- **Prerequisites (Depends on)**: `perceptron_rosenblatt`
+- **Leads to (Used in)**: `activation_functions`, `backpropagation_algorithm`, `ai_neurosymbolic_hybrid`, `transformers_self_attention`, `variational_autoencoders`, `diffusion_models`, `recurrent_networks_lstm`
+- **Topological Study Path (Kahn Sort)**: `linear_algebra_spectral` -> `convex_optimization` -> `perceptron_rosenblatt` -> `mlp_neural_networks`
+- **Interactive Simulator**: Funções de Ativação Neurais (Sigmoide, ReLU, Tanh) (`neural_activations`)
+- **Canonical References**: Bishop: Cap. 5.1; Hastie: Cap. 11.3; Marques de Sá: Cap. 6; Müller & Guido: Cap. 2.3.8
+- **Implementation (scikit-learn - executable_example)**:
+```scikit-learn
+from sklearn.neural_network import MLPClassifier
+mlp = MLPClassifier(hidden_layer_sizes=(64, 32), activation="relu", max_iter=500)
+```
+
+---
+
+### `naive_bayes_models`: Classificador Naive Bayes (Gaussian, Multinomial, Bernoulli) [Level 2 | Domain: academic_ml | non_connectionist]
+- **Discipline Area**: Aprendizagem Computacional
+- **Summary**: Inferência bayesiana com assunção forte de independência condicional dos atributos dada a classe.
+- **Rigorous Definition**: Aplica o Teorema de Bayes assumindo que todos os atributos são mutuamente independentes quando condicionadas à classe. Apesar de violada na prática, o classificador apresenta excelente desempenho em texto e problemas de alta dimensionalidade.
+- **Mathematical Formula**: `$P(y | \mathbf{x}) \propto P(y) \prod_{j=1}^d P(x_j | y), \quad \hat{y} = \arg\max_y \left[ \ln P(y) + \sum_{j=1}^d \ln P(x_j | y) \right]$`
+- **Prerequisites (Depends on)**: `prob_theory`, `target_variable`
+- **Leads to (Used in)**: None (Terminal Application)
+- **Topological Study Path (Kahn Sort)**: `prob_theory` -> `target_variable` -> `naive_bayes_models`
+- **Interactive Simulator**: Classificador Naive Bayes & Atualização a Posteriori (`bayesian_inference`)
+- **Canonical References**: Bishop: Cap. 4.2; Hastie: Cap. 6.6.3; Flach: Cap. 9
+- **Implementation (scikit-learn - executable_example)**:
+```scikit-learn
+from sklearn.naive_bayes import GaussianNB, MultinomialNB
+nb = GaussianNB().fit(X_train, y_train)
+```
+
+---
+
+### `no_free_lunch`: Teorema "No Free Lunch" & Inductive Bias [Level 2 | Domain: academic_ml | ml_core]
+- **Discipline Area**: Aprendizagem Computacional
+- **Summary**: Nenhum algoritmo de aprendizagem é universalmente superior a todos os outros em todos os problemas possíveis.
+- **Rigorous Definition**: Formulado por Wolpert e Macready (1997). Se nenhum pressuposto for feito sobre a distribuição geradora dos dados, a média do desempenho de qualquer algoritmo sobre todas as distribuições possíveis é idêntica. Todo o sucesso advém do seu viés indutivo.
+- **Mathematical Formula**: `$\sum_f P(d|f) \text{Perf}(A_1, f) = \sum_f P(d|f) \text{Perf}(A_2, f)$`
+- **Prerequisites (Depends on)**: `statistical_learning_theory`
+- **Leads to (Used in)**: None (Terminal Application)
+- **Topological Study Path (Kahn Sort)**: `prob_theory` -> `convex_optimization` -> `statistical_learning_theory` -> `no_free_lunch`
+- **Canonical References**: Flach: Cap. 1; Duda: Cap. 9.2
+- **Implementation (python - illustrative_snippet)**:
+```python
+# Justificação da necessidade de comparar múltiplos algoritmos
+```
+
+---
+
+### `sequential_covering`: Cobertura Sequencial (Sequential Covering & Separate-and-Conquer) [Level 2 | Domain: academic_ml | rule_based]
+- **Discipline Area**: Aprendizagem Computacional
+- **Summary**: Aprende uma regra de alta precisão, remove os exemplos cobertos e repete recursivamente.
+- **Rigorous Definition**: Estratégia central dos sistemas de indução de regras. Ao contrário de divide-and-conquer (árvores), separate-and-conquer aprende uma regra IF-THEN que cobre um subconjunto de instâncias positivas, remove essas instâncias do conjunto de treino e aprende a regra seguinte sobre os dados restantes.
+- **Mathematical Formula**: `$D^{(t+1)} = D^{(t)} \setminus \{ \mathbf{x} \in D^{(t)} \mid \text{Regra}_t(\mathbf{x}) = \text{True} \}$`
+- **Prerequisites (Depends on)**: `inductive_logic`, `feature_space`, `target_variable`
+- **Leads to (Used in)**: `ripper_cn2_rules`, `decision_list_trees_to_rules`
+- **Topological Study Path (Kahn Sort)**: `prob_theory` -> `linear_algebra_spectral` -> `inductive_logic` -> `target_variable` -> `feature_space` -> `sequential_covering`
+- **Canonical References**: Mitchell: Cap. 10.2; Flach: Cap. 5.3; Gama: Cap. 6
+- **Implementation (python - illustrative_snippet)**:
+```python
+# Base de algoritmos clássicos como CN2, PRISM e RIPPER
+```
+
+---
+
+### `svm_max_margin`: Support Vector Machines (SVM) & Hiperplano de Margem Máxima [Level 2 | Domain: academic_ml | non_connectionist]
+- **Discipline Area**: Aprendizagem Computacional
+- **Summary**: Maximização da margem geométrica 2/||w|| e vetores de suporte na formulação primal/dual.
+- **Rigorous Definition**: Encontra o hiperplano separador ótimo que maximiza a distância aos pontos mais próximos de ambas as classes (vetores de suporte). A formulação de margem suave introduz variáveis de folga xi_i para lidar com classes não perfeitamente separáveis.
+- **Mathematical Formula**: `$\min_{\mathbf{w}, b, \boldsymbol{\xi}} \frac{1}{2} \|\mathbf{w}\|^2 + C \sum_{i=1}^N \xi_i \quad \text{s.t.} \quad y_i(\mathbf{w}^T \mathbf{x}_i + b) \ge 1 - \xi_i$`
+- **Prerequisites (Depends on)**: `convex_optimization`, `statistical_learning_theory`, `metric_spaces`
+- **Leads to (Used in)**: `kernel_trick`
+- **Topological Study Path (Kahn Sort)**: `convex_optimization` -> `prob_theory` -> `linear_algebra_spectral` -> `statistical_learning_theory` -> `metric_spaces` -> `svm_max_margin`
+- **Canonical References**: Bishop: Cap. 7.1; Hastie: Cap. 12; Duda: Cap. 5.11; Murty & Devi: Cap. 4
+- **Implementation (scikit-learn - executable_example)**:
+```scikit-learn
+from sklearn.svm import SVC
+svm = SVC(C=1.0, kernel="linear").fit(X_train, y_train)
+```
+
+---
+
+### `activation_functions`: Funções de Ativação (Sigmoide, Tanh, ReLU, Softmax) [Level 3 | Domain: academic_ml | connectionist]
+- **Discipline Area**: Aprendizagem Computacional
+- **Summary**: Não-linearidades fundamentais para impedir o colapso da rede numa transformação linear pura.
+- **Rigorous Definition**: Funções aplicadas à soma ponderada dos inputs. Sigmoide e Tanh sofrem de desaparecimento do gradiente (vanishing gradient); a ReLU (Rectified Linear Unit, max(0, x)) resolve esse problema e acelera o treino; Softmax converte saídas multivariadas em probabilidades.
+- **Mathematical Formula**: `$\text{ReLU}(z) = \max(0, z), \quad \text{Softmax}(\mathbf{z})_i = \frac{e^{z_i}}{\sum_{j=1}^K e^{z_j}}$`
+- **Prerequisites (Depends on)**: `mlp_neural_networks`
+- **Leads to (Used in)**: `backpropagation_algorithm`
+- **Topological Study Path (Kahn Sort)**: `convex_optimization` -> `linear_algebra_spectral` -> `perceptron_rosenblatt` -> `mlp_neural_networks` -> `activation_functions`
+- **Canonical References**: Bishop: Cap. 5.1; Hastie: Cap. 11.3
+- **Implementation (python - executable_example)**:
+```python
+import numpy as np
+def relu(z): return np.maximum(0, z)
+def softmax(z): exp_z = np.exp(z - np.max(z)); return exp_z / exp_z.sum()
+```
+
+---
+
+### `ai_neurosymbolic_hybrid`: IA Neuro-Simbólica & Arquiteturas Híbridas [Level 3 | Domain: masters_ai | complementary]
+- **Discipline Area**: Paradigmas de Inteligência Artificial
+- **Summary**: Convergência entre a robustez empírica de redes neurais e a verificabilidade de raciocínio simbólico.
+- **Rigorous Definition**: A fronteira contemporânea da IA. Combina a aprendizagem representacional contínua (conexionista) com restrições lógicas e ontológicas formais (simbólicas), mitigando alucinações em LLMs e garantindo propriedades de segurança verificáveis.
+- **Mathematical Formula**: `$\mathcal{L}_{\text{total}}(\theta) = \mathcal{L}_{\text{empírica}}(y, f_\theta(x)) + \lambda \mathcal{L}_{\text{lógica}}(\text{Axiomas}, f_\theta(x))$`
+- **Prerequisites (Depends on)**: `ai_paradigms_symbolic`, `mlp_neural_networks`
+- **Leads to (Used in)**: None (Terminal Application)
+- **Topological Study Path (Kahn Sort)**: `convex_optimization` -> `linear_algebra_spectral` -> `inductive_logic` -> `perceptron_rosenblatt` -> `ai_paradigms_symbolic` -> `mlp_neural_networks` -> `ai_neurosymbolic_hybrid`
+- **Canonical References**: Marcus (2020): The Next Decade in AI
+- **Implementation (python - illustrative_snippet)**:
+```python
+# Perda híbrida: CrossEntropy + Penalidade de violação lógica KKT
+```
+
+---
+
+### `bias_variance_tradeoff`: Decomposição Viés-Variância (Bias-Variance) [Level 3 | Domain: academic_ml | ml_core]
+- **Discipline Area**: Aprendizagem Computacional
+- **Summary**: Erro Esperado = Viés^2 + Variância + Ruído Irredutível.
+- **Rigorous Definition**: Dilema central de Machine Learning: Modelos demasiado restritivos têm alto viés (subajustamento / underfitting); modelos demasiado flexíveis têm alta variância (sobreajustamento / overfitting aos dados amostrais).
+- **Mathematical Formula**: `$\mathbb{E}[(y - \hat{f}(x))^2] = (\text{Bias}[\hat{f}(x)])^2 + \text{Var}[\hat{f}(x)] + \sigma^2$`
+- **Prerequisites (Depends on)**: `loss_functions_mle`, `statistical_learning_theory`
+- **Leads to (Used in)**: `decision_tree_pruning`, `knn_algorithm`, `ensemble_random_forest`
+- **Topological Study Path (Kahn Sort)**: `convex_optimization` -> `prob_theory` -> `statistical_learning_theory` -> `target_variable` -> `loss_functions_mle` -> `bias_variance_tradeoff`
+- **Canonical References**: Bishop: Cap. 3.2; Hastie: Cap. 2.9
+- **Implementation (python - illustrative_snippet)**:
+```python
+# Avaliação da complexidade do modelo e decomposição de erro
+```
+
+---
+
+### `confusion_matrix_metrics`: Matriz de Confusão & Métricas Derivadas [Level 3 | Domain: academic_ml | metrics]
+- **Discipline Area**: Aprendizagem Computacional
+- **Summary**: TP, FP, TN, FN, Accuracy, Precision, Recall, Especificidade e F1-Score.
+- **Rigorous Definition**: Quadro comparativo fundamental entre rótulos reais e preditos. Precisão foca em minimizar falsos alarmes; Recall foca em capturar todos os positivos; F1 é a média harmónica ponderada.
+- **Mathematical Formula**: `$\text{Prec} = \frac{TP}{TP+FP}, \quad \text{Rec} = \frac{TP}{TP+FN}, \quad F_1 = \frac{2 \cdot \text{Prec} \cdot \text{Rec}}{\text{Prec} + \text{Rec}}$`
+- **Prerequisites (Depends on)**: `target_variable`, `dataset_split_leakage`
+- **Leads to (Used in)**: `roc_auc_curves`, `imbalanced_learning_smote`
+- **Topological Study Path (Kahn Sort)**: `prob_theory` -> `linear_algebra_spectral` -> `target_variable` -> `feature_space` -> `dataset_split_leakage` -> `confusion_matrix_metrics`
+- **Interactive Simulator**: Matriz de Confusão, Precision & Recall (`confusion_matrix`)
+- **Canonical References**: Flach: Cap. 2
+- **Implementation (scikit-learn - executable_example)**:
+```scikit-learn
+from sklearn.metrics import classification_report, confusion_matrix
+print(classification_report(y_test, y_pred))
+```
+
+---
+
+### `cross_validation_kfold`: Protocolos de Validação Cruzada (K-Fold CV & Stratified) [Level 3 | Domain: academic_ml | preprocessing]
+- **Discipline Area**: Aprendizagem Computacional
+- **Summary**: Divisão K-Fold, K-Fold Estratificado (para classes assimétricas) e Nested Cross-Validation.
+- **Rigorous Definition**: Garante que cada amostra é utilizada exatamente uma vez no teste. O K-Fold estratificado preserva as proporções relativas de classes em cada dobra, reduzindo o viés de amostragem.
+- **Mathematical Formula**: `$\text{CV}_K = \frac{1}{K} \sum_{k=1}^K \text{Score}(M_k, D_{\text{val}, k})$`
+- **Prerequisites (Depends on)**: `dataset_split_leakage`
+- **Leads to (Used in)**: None (Terminal Application)
+- **Topological Study Path (Kahn Sort)**: `prob_theory` -> `linear_algebra_spectral` -> `target_variable` -> `feature_space` -> `dataset_split_leakage` -> `cross_validation_kfold`
+- **Canonical References**: Hastie: Cap. 7.10; Bishop: Cap. 1.3
+- **Implementation (scikit-learn - executable_example)**:
+```scikit-learn
+from sklearn.model_selection import StratifiedKFold, cross_val_score
+skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
+```
+
+---
+
+### `decision_trees_c45_cart`: C4.5 (Gain Ratio) & CART (Gini) [Level 3 | Domain: academic_ml | non_connectionist]
+- **Discipline Area**: Aprendizagem Computacional
+- **Summary**: O C4.5 normaliza o ganho pelo Split Information (Gain Ratio); o CART utiliza a redução da impureza de Gini com divisões estritamente binárias.
+- **Rigorous Definition**: O C4.5 introduz GainRatio(S, A) = Gain / SplitInfo para penalizar atributos com demasiados ramos, trata valores em falta e cria divisões binárias em variáveis contínuas (A <= t). O CART utiliza a impureza de Gini: Gini = 1 - sum(p_i^2).
+- **Mathematical Formula**: `$GR(D, A) = \frac{IG(D, A)}{-\sum \frac{|D_v|}{|D|} \log_2 \frac{|D_v|}{|D|}}, \quad Gini(D) = 1 - \sum_{k=1}^K p_k^2, \quad \Delta Gini = Gini(D) - \sum \frac{|D_v|}{|D|} Gini(D_v)$`
+- **Prerequisites (Depends on)**: `decision_trees_id3`
+- **Leads to (Used in)**: `decision_tree_pruning`, `ensemble_random_forest`, `gradient_boosting`, `decision_list_trees_to_rules`
+- **Topological Study Path (Kahn Sort)**: `prob_theory` -> `linear_algebra_spectral` -> `inductive_logic` -> `shannon_info` -> `feature_space` -> `decision_trees_id3` -> `decision_trees_c45_cart`
+- **Interactive Simulator**: Ganho de Informação, Gain Ratio e Gini (`entropy_gain`)
+- **Canonical References**: Hastie: Cap. 9.2; Breiman et al. (1984)
+- **Implementation (scikit-learn - executable_example)**:
+```scikit-learn
+from sklearn.tree import DecisionTreeClassifier, plot_tree
+clf = DecisionTreeClassifier(criterion="gini", max_depth=3)
+clf.fit(X_tr, y_tr)
+```
+
+---
+
+### `diffusion_models`: Modelos de Difusão (DDPM) [Level 3 | Domain: masters_ai | complementary]
+- **Discipline Area**: Modelos Generativos & Deep Learning
+- **Summary**: Geração generativa através da inversão temporal de um processo estocástico de adição de ruído gaussiano.
+- **Rigorous Definition**: Estado da arte em geração visual e multimodal (ex: Stable Diffusion, Midjourney). Um processo direto degrada gradualmente o sinal original adicionando ruído gaussiano; uma rede neural treinada aprende o processo inverso para subtrair ruído passo a passo.
+- **Mathematical Formula**: `$q(\mathbf{x}_t \mid \mathbf{x}_{t-1}) = \mathcal{N}(\mathbf{x}_t; \sqrt{1 - \beta_t}\mathbf{x}_{t-1}, \beta_t \mathbf{I}), \quad \mathcal{L}(\theta) = \mathbb{E}[\| \epsilon - \epsilon_\theta(\mathbf{x}_t, t) \|^2]$`
+- **Prerequisites (Depends on)**: `multivariable_calculus`, `prob_theory`, `mlp_neural_networks`
+- **Leads to (Used in)**: None (Terminal Application)
+- **Topological Study Path (Kahn Sort)**: `convex_optimization` -> `prob_theory` -> `linear_algebra_spectral` -> `multivariable_calculus` -> `perceptron_rosenblatt` -> `mlp_neural_networks` -> `diffusion_models`
+- **Canonical References**: Ho et al. (2020): Denoising Diffusion Probabilistic Models
+- **Implementation (python - illustrative_snippet)**:
+```python
+# Predição do ruído adicionado: loss = MSE(noise, model(noisy_x, timestep))
+```
+
+---
+
+### `kernel_trick`: O "Truque do Kernel" (Kernel Trick & Teorema de Mercer) [Level 3 | Domain: academic_ml | non_connectionist]
+- **Discipline Area**: Aprendizagem Computacional
+- **Summary**: Mapeamento implícito para espaços de dimensão infinita através de produtos internos k(x, x').
+- **Rigorous Definition**: Permite separar dados não lineares sem calcular explicitamente a transformação phi(x). Pelo Teorema de Mercer, qualquer função contínua simétrica semi-definida positiva K(x, z) corresponde a um produto interno num espaço de Hilbert.
+- **Mathematical Formula**: `$K(\mathbf{x}, \mathbf{x}') = \langle \phi(\mathbf{x}), \phi(\mathbf{x}') \rangle, \quad K_{\text{RBF}}(\mathbf{x}, \mathbf{x}') = \exp(-\gamma \|\mathbf{x} - \mathbf{x}'\|^2)$`
+- **Prerequisites (Depends on)**: `svm_max_margin`, `linear_algebra_spectral`
+- **Leads to (Used in)**: None (Terminal Application)
+- **Topological Study Path (Kahn Sort)**: `convex_optimization` -> `prob_theory` -> `linear_algebra_spectral` -> `statistical_learning_theory` -> `metric_spaces` -> `svm_max_margin` -> `kernel_trick`
+- **Canonical References**: Bishop: Cap. 6.1-6.2; Hastie: Cap. 12.3; Flach: Cap. 11
+- **Implementation (python - illustrative_snippet)**:
+```python
+svm_rbf = SVC(kernel="rbf", gamma="scale", C=10.0).fit(X_tr, y_tr)
+```
+
+---
+
+### `linear_logistic_regression`: Regressões: Linear (OLS) & Logística (Sigmoide) [Level 3 | Domain: academic_ml | non_connectionist]
+- **Discipline Area**: Aprendizagem Computacional
+- **Summary**: Ajuste de hiperplanos contínuos e classificação probabilística binária via transformação logit.
+- **Rigorous Definition**: A Regressão Linear minimiza resíduos quadráticos (w = (X^T X)^-1 X^T y). A Regressão Logística mapeia z = w^T x para [0, 1] através da sigmoide sigma(z) = 1/(1+e^-z), treinada por máxima verossimilhança com penalizações Ridge (L2) e Lasso (L1).
+- **Mathematical Formula**: `$\sigma(z) = \frac{1}{1 + e^{-z}}, \quad \ln\left(\frac{p}{1-p}\right) = \mathbf{w}^T \mathbf{x}, \quad \min_{\mathbf{w}} -\ell(\mathbf{w}) + \lambda \|\mathbf{w}\|_2^2$`
+- **Prerequisites (Depends on)**: `convex_optimization`, `loss_functions_mle`
+- **Leads to (Used in)**: None (Terminal Application)
+- **Topological Study Path (Kahn Sort)**: `convex_optimization` -> `prob_theory` -> `target_variable` -> `loss_functions_mle` -> `linear_logistic_regression`
+- **Interactive Simulator**: Probabilidade Logística & Curva Sigmóide (`neural_activations`)
+- **Canonical References**: Bishop: Cap. 3.1 & 4.3; Hastie: Cap. 3 e 4.4
+- **Implementation (scikit-learn - executable_example)**:
+```scikit-learn
+from sklearn.linear_model import LogisticRegression, Ridge
+lr = LogisticRegression(C=1.0, penalty="l2").fit(X_train, y_train)
+```
+
+---
+
+### `model_interpretability_shap`: Interpretabilidade de Modelos (SHAP & LIME) [Level 3 | Domain: academic_ml | complementary]
+- **Discipline Area**: Aprendizagem Computacional
+- **Summary**: Valores de Shapley da Teoria dos Jogos e aproximações locais lineares para auditoria de caixas-negras.
+- **Rigorous Definition**: Garante transparência em modelos complexos (XGBoost, Redes). Os Shapley Additive Explanations (SHAP) quantificam rigorosamente a contribuição marginal de cada atributo para desviar a previsão da média base.
+- **Mathematical Formula**: `$\phi_i = \sum_{S \subseteq F \setminus \{i\}} \frac{|S|!(|F| - |S| - 1)!}{|F|!} [f(S \cup \{i\}) - f(S)]$`
+- **Prerequisites (Depends on)**: `statistical_learning_theory`, `loss_functions_mle`
+- **Leads to (Used in)**: None (Terminal Application)
+- **Topological Study Path (Kahn Sort)**: `convex_optimization` -> `prob_theory` -> `statistical_learning_theory` -> `target_variable` -> `loss_functions_mle` -> `model_interpretability_shap`
+- **Canonical References**: Lundberg & Lee (2017); Molnar (2020)
+- **Implementation (python - executable_example)**:
+```python
+import shap
+explainer = shap.TreeExplainer(model)
+shap_values = explainer.shap_values(X_test)
+```
+
+---
+
+### `q_learning_td`: Q-Learning & Métodos de Diferença Temporal (TD) [Level 3 | Domain: masters_ai | non_connectionist]
+- **Discipline Area**: Aprendizagem Computacional
+- **Summary**: Aprendizagem por reforço livre de modelo (model-free), fora da política (off-policy) via erro TD.
+- **Rigorous Definition**: Algoritmo de Watkins (1989). Permite ao agente aprender a função ação-valor Q(s,a) diretamente a partir de experiências interativas no ambiente, sem requerer o conhecimento prévio das probabilidades de transição de estados.
+- **Mathematical Formula**: `$Q(s, a) \leftarrow Q(s, a) + \alpha \left[ r + \gamma \max_{a'} Q(s', a') - Q(s, a) \right]$`
+- **Prerequisites (Depends on)**: `bellman_equations`
+- **Leads to (Used in)**: None (Terminal Application)
+- **Topological Study Path (Kahn Sort)**: `convex_optimization` -> `prob_theory` -> `markov_decision_process` -> `bellman_equations` -> `q_learning_td`
+- **Canonical References**: Sutton & Barto: Cap. 6; Watkins (1989)
+- **Implementation (python - executable_example)**:
+```python
+import numpy as np
+# Atualização Q-Learning
+td_target = reward + gamma * np.max(Q[next_state])
+Q[state, action] += alpha * (td_target - Q[state, action])
+```
+
+---
+
+### `recurrent_networks_lstm`: Redes Recorrentes & Células LSTM [Level 3 | Domain: masters_ai | connectionist]
+- **Discipline Area**: Redes Recorrentes & Séries Temporais
+- **Summary**: Processamento sequencial com portas de esquecimento (forget gate), entrada e saída para gradientes estáveis.
+- **Rigorous Definition**: Arquitetura concebida por Hochreiter & Schmidhuber (1997) para combater o problema do desaparecimento de gradiente (vanishing gradient) em sequências longas, mantendo um estado de célula que atua como uma esteira de transporte de memória.
+- **Mathematical Formula**: `$f_t = \sigma(\mathbf{W}_f [h_{t-1}, x_t] + b_f), \quad C_t = f_t \odot C_{t-1} + i_t \odot \tilde{C}_t$`
+- **Prerequisites (Depends on)**: `mlp_neural_networks`
+- **Leads to (Used in)**: None (Terminal Application)
+- **Topological Study Path (Kahn Sort)**: `convex_optimization` -> `linear_algebra_spectral` -> `perceptron_rosenblatt` -> `mlp_neural_networks` -> `recurrent_networks_lstm`
+- **Canonical References**: Hochreiter & Schmidhuber (1997); Goodfellow: Deep Learning
+- **Implementation (python - executable_example)**:
+```python
+from tensorflow.keras.layers import LSTM
+model.add(LSTM(64, return_sequences=True))
+```
+
+---
+
+### `ripper_cn2_rules`: Algoritmos RIPPER & CN2 [Level 3 | Domain: academic_ml | rule_based]
+- **Discipline Area**: Aprendizagem Computacional
+- **Summary**: Otimização com pós-poda de regras (Reduced Error Pruning) e tratamento eficiente de ruído.
+- **Rigorous Definition**: Repeated Incremental Pruning to Produce Error Reduction (Cohen, 1995). Constrói regras com seleção gulosa baseada em ganho de informação de Foster e aplica poda imediata com base na fração de erros no conjunto de validação, sendo altamente escalável O(N log^2 N).
+- **Mathematical Formula**: `$\text{FoilGain} = p_1 \left( \log_2 \frac{p_1}{p_1 + n_1} - \log_2 \frac{p_0}{p_0 + n_0} \right)$`
+- **Prerequisites (Depends on)**: `sequential_covering`
+- **Leads to (Used in)**: None (Terminal Application)
+- **Topological Study Path (Kahn Sort)**: `prob_theory` -> `linear_algebra_spectral` -> `inductive_logic` -> `target_variable` -> `feature_space` -> `sequential_covering` -> `ripper_cn2_rules`
+- **Canonical References**: Cohen (1995); Flach: Cap. 5; Gama: Cap. 6
+- **Implementation (python - illustrative_snippet)**:
+```python
+# Implementações modernas via biblioteca wittgenstein (RIPPER / IREP em Python)
+```
+
+---
+
+### `transformers_self_attention`: Mecanismo de Atenção & Arquitetura Transformer [Level 3 | Domain: masters_ai | connectionist]
+- **Discipline Area**: Modelos Generativos & Deep Learning
+- **Summary**: Mecanismo Scaled Dot-Product Self-Attention com projeções Query, Key e Value.
+- **Rigorous Definition**: Introduzido por Vaswani et al. (2017) ('Attention Is All You Need'). Substituiu a recorrência sequencial por atenção em paralelo, calculando a relevância mútua entre todos os pares de tokens através de similaridade no espaço de projeções lineares.
+- **Mathematical Formula**: `$\text{Attention}(\mathbf{Q}, \mathbf{K}, \mathbf{V}) = \text{softmax}\left( \frac{\mathbf{Q}\mathbf{K}^T}{\sqrt{d_k}} \right) \mathbf{V}$`
+- **Prerequisites (Depends on)**: `mlp_neural_networks`, `linear_algebra_spectral`
+- **Leads to (Used in)**: None (Terminal Application)
+- **Topological Study Path (Kahn Sort)**: `convex_optimization` -> `linear_algebra_spectral` -> `perceptron_rosenblatt` -> `mlp_neural_networks` -> `transformers_self_attention`
+- **Canonical References**: Vaswani et al. (2017)
+- **Implementation (pytorch - executable_example)**:
+```pytorch
+import torch
+import torch.nn.functional as F
+scores = torch.matmul(Q, K.transpose(-2, -1)) / math.sqrt(d_k)
+attn_weights = F.softmax(scores, dim=-1)
+output = torch.matmul(attn_weights, V)
+```
+
+---
+
+### `variational_autoencoders`: Autoencoders Variacionais (VAE) [Level 3 | Domain: masters_ai | unsupervised]
+- **Discipline Area**: Modelos Generativos & Deep Learning
+- **Summary**: Modelos generativos probabilísticos com espaço latente contínuo e Reparameterization Trick.
+- **Rigorous Definition**: Propõe mapear os dados de entrada para uma distribuição gaussiana no espaço latente parametrizada por mu e sigma. A função de perda ELBO (Evidence Lower Bound) equilibra o erro de reconstrução e a divergência KL para com a normal padrão.
+- **Mathematical Formula**: `$\mathcal{L}_{\text{ELBO}}(\theta, \phi; x) = \mathbb{E}_{q_\phi(z|x)}[\ln p_\theta(x|z)] - D_{\text{KL}}(q_\phi(z|x) \parallel p(z))$`
+- **Prerequisites (Depends on)**: `bayesian_inference_mle`, `mlp_neural_networks`, `shannon_info`
+- **Leads to (Used in)**: None (Terminal Application)
+- **Topological Study Path (Kahn Sort)**: `convex_optimization` -> `prob_theory` -> `linear_algebra_spectral` -> `bayesian_inference_mle` -> `shannon_info` -> `perceptron_rosenblatt` -> `mlp_neural_networks` -> `variational_autoencoders`
+- **Canonical References**: Kingma & Welling (2013): Auto-Encoding Variational Bayes
+- **Implementation (python - illustrative_snippet)**:
+```python
+# Reparameterization trick: z = mu + sigma * epsilon, onde epsilon ~ N(0, I)
+```
+
+---
+
+### `backpropagation_algorithm`: Algoritmo de Retropropagação (Backpropagation) [Level 4 | Domain: academic_ml | connectionist]
+- **Discipline Area**: Aprendizagem Computacional
+- **Summary**: Aplicação recursiva da Regra da Cadeia do Cálculo para propagar os erros da saída para as camadas iniciais.
+- **Rigorous Definition**: Desenvolvido e popularizado por Rumelhart, Hinton e Williams (1986). Calcula eficientemente as derivadas parciais da função de perda em relação a cada peso w_ij da rede através de passagens para a frente (Forward pass) e passagens para trás (Backward pass).
+- **Mathematical Formula**: `$\delta_j^{(l)} = \left( \sum_k \delta_k^{(l+1)} w_{kj}^{(l+1)} \right) \sigma'(z_j^{(l)}), \quad \frac{\partial L}{\partial w_{ji}^{(l)}} = a_i^{(l-1)} \delta_j^{(l)}$`
+- **Prerequisites (Depends on)**: `mlp_neural_networks`, `activation_functions`, `convex_optimization`
+- **Leads to (Used in)**: `universal_approximation`
+- **Topological Study Path (Kahn Sort)**: `convex_optimization` -> `linear_algebra_spectral` -> `perceptron_rosenblatt` -> `mlp_neural_networks` -> `activation_functions` -> `backpropagation_algorithm`
+- **Canonical References**: Bishop: Cap. 5.3; Hastie: Cap. 11.4; Marques de Sá: Cap. 6
+- **Implementation (python - illustrative_snippet)**:
+```python
+# Otimizador Adam com retropropagação implementado no scikit-learn ou PyTorch:
+mlp = MLPClassifier(solver="adam", learning_rate_init=0.001)
+```
+
+---
+
+### `decision_list_trees_to_rules`: Conversão de Árvores em Listas de Decisão [Level 4 | Domain: academic_ml | rule_based]
+- **Discipline Area**: Aprendizagem Computacional
+- **Summary**: Transformação de caminhos da raiz às folhas em regras IF-THEN independentes com simplificação lógica.
+- **Rigorous Definition**: Cada caminho num árvore de decisão corresponde a uma conjunção de testes. Ao converter para um conjunto de regras, restrições redundantes ao longo do caminho podem ser eliminadas por poda individual de antecedentes sem afetar as restantes regras.
+- **Mathematical Formula**: `$\text{Árvore } T = \bigvee_{m=1}^{|T|} \left( \bigwedge_{j \in \text{Path}_m} \text{Teste}_j \implies c_m \right)$`
+- **Prerequisites (Depends on)**: `sequential_covering`, `decision_trees_c45_cart`
+- **Leads to (Used in)**: None (Terminal Application)
+- **Topological Study Path (Kahn Sort)**: `prob_theory` -> `linear_algebra_spectral` -> `inductive_logic` -> `shannon_info` -> `target_variable` -> `feature_space` -> `decision_trees_id3` -> `sequential_covering` -> `decision_trees_c45_cart` -> `decision_list_trees_to_rules`
+- **Canonical References**: Mitchell: Cap. 3.7.1; Quinlan (1993)
+- **Implementation (scikit-learn - executable_example)**:
+```scikit-learn
+from sklearn.tree import export_text
+rules_text = export_text(clf, feature_names=iris.feature_names)
+```
+
+---
+
+### `decision_tree_pruning`: Poda de Árvores (Pre-pruning & Cost-Complexity Pruning) [Level 4 | Domain: academic_ml | non_connectionist]
+- **Discipline Area**: Aprendizagem Computacional
+- **Summary**: Interrupção antecipada (max_depth, min_samples_leaf) e poda pós-treino por custo-complexidade (ccp_alpha).
+- **Rigorous Definition**: Árvores completas sofrem de sobreajustamento severo (memorizam ruído). A pré-poda limita parâmetros de crescimento; a pós-poda minimiza R_alpha(T) = R(T) + alpha*|T| onde |T| é o número de folhas terminais.
+- **Mathematical Formula**: `$R_\alpha(T) = \sum_{m=1}^{|T|} N_m Q_m(T) + \alpha |T|$`
+- **Prerequisites (Depends on)**: `decision_trees_c45_cart`, `bias_variance_tradeoff`
+- **Leads to (Used in)**: None (Terminal Application)
+- **Topological Study Path (Kahn Sort)**: `convex_optimization` -> `prob_theory` -> `linear_algebra_spectral` -> `inductive_logic` -> `shannon_info` -> `statistical_learning_theory` -> `target_variable` -> `feature_space` -> `loss_functions_mle` -> `decision_trees_id3` -> `bias_variance_tradeoff` -> `decision_trees_c45_cart` -> `decision_tree_pruning`
+- **Canonical References**: Hastie: Cap. 9.2.2
+- **Implementation (python - illustrative_snippet)**:
+```python
+clf = DecisionTreeClassifier(ccp_alpha=0.015, min_samples_leaf=4)
+```
+
+---
+
+### `ensemble_random_forest`: Florestas Aleatórias (Random Forests) & Bagging [Level 4 | Domain: academic_ml | non_connectionist]
+- **Discipline Area**: Aprendizagem Computacional
+- **Summary**: Agregação por Bootstrap (Bagging) de árvores descorrelacionadas com seleção aleatória de atributos.
+- **Rigorous Definition**: Criado por Leo Breiman (2001). Treina centenas de árvores de decisão em amostras bootstrap dos dados, sorteando aleatoriamente um subconjunto de sqrt(d) atributos em cada divisão de nó. Reduz dramaticamente a variância sem aumentar o viés.
+- **Mathematical Formula**: `$\hat{f}_{\text{RF}}(\mathbf{x}) = \frac{1}{B} \sum_{b=1}^B T_b(\mathbf{x}), \quad m = \lfloor \sqrt{d} \rfloor$`
+- **Prerequisites (Depends on)**: `decision_trees_c45_cart`, `bias_variance_tradeoff`
+- **Leads to (Used in)**: None (Terminal Application)
+- **Topological Study Path (Kahn Sort)**: `convex_optimization` -> `prob_theory` -> `linear_algebra_spectral` -> `inductive_logic` -> `shannon_info` -> `statistical_learning_theory` -> `target_variable` -> `feature_space` -> `loss_functions_mle` -> `decision_trees_id3` -> `bias_variance_tradeoff` -> `decision_trees_c45_cart` -> `ensemble_random_forest`
+- **Canonical References**: e 6; Hastie: Cap. 15; Bishop: Cap. 14.3; Müller & Guido: Cap. 2.3.6
+- **Implementation (scikit-learn - executable_example)**:
+```scikit-learn
+from sklearn.ensemble import RandomForestClassifier
+rf = RandomForestClassifier(n_estimators=100, max_features="sqrt").fit(X_tr, y_tr)
+```
+
+---
+
+### `gradient_boosting`: Boosting Gradiente (Gradient Boosting & AdaBoost) [Level 4 | Domain: academic_ml | non_connectionist]
+- **Discipline Area**: Aprendizagem Computacional
+- **Summary**: Combinação sequencial aditiva onde cada novo estimador ajusta os resíduos e erros dos anteriores.
+- **Rigorous Definition**: Algoritmo de ensemble sequencial: começa com um modelo fraco (árvores rasas) e ajusta árvores subsequentes ao gradiente negativo da função de perda (pseudorresíduos), reduzindo sequencialmente o viés empírico.
+- **Mathematical Formula**: `$F_m(\mathbf{x}) = F_{m-1}(\mathbf{x}) + \eta \sum_{j=1}^{J_m} \gamma_{jm} \mathbb{I}(\mathbf{x} \in R_{jm}), \quad r_{im} = -\left[ \frac{\partial L(y_i, F(\mathbf{x}_i))}{\partial F(\mathbf{x}_i)} \right]$`
+- **Prerequisites (Depends on)**: `decision_trees_c45_cart`, `loss_functions_mle`
+- **Leads to (Used in)**: None (Terminal Application)
+- **Topological Study Path (Kahn Sort)**: `convex_optimization` -> `prob_theory` -> `linear_algebra_spectral` -> `inductive_logic` -> `shannon_info` -> `target_variable` -> `feature_space` -> `loss_functions_mle` -> `decision_trees_id3` -> `decision_trees_c45_cart` -> `gradient_boosting`
+- **Canonical References**: e 6; Hastie: Cap. 10; Bishop: Cap. 14.2; Müller & Guido: Cap. 2.3.7
+- **Implementation (scikit-learn - executable_example)**:
+```scikit-learn
+from sklearn.ensemble import GradientBoostingClassifier
+gb = GradientBoostingClassifier(n_estimators=100, learning_rate=0.1)
+```
+
+---
+
+### `knn_algorithm`: K-Nearest Neighbors (KNN) & Classificação por Voto [Level 4 | Domain: academic_ml | non_connectionist]
+- **Discipline Area**: Aprendizagem Computacional
+- **Summary**: Classificador não-paramétrico baseado em instâncias (Lazy Learner) e votação maioritária ponderada.
+- **Rigorous Definition**: Não constrói uma função explícita no treino. Dado um ponto de teste x_q, encontra os k vizinhos mais próximos no espaço métrico e atribui a classe maioritária (ou média na regressão). Extremamente sensível à escala e à maldição da dimensionalidade.
+- **Mathematical Formula**: `$\hat{y} = \arg\max_{c} \sum_{i \in N_k(\mathbf{x}_q)} w_i \mathbb{I}(y_i = c), \quad w_i = \frac{1}{d(\mathbf{x}_q, \mathbf{x}_i)}$`
+- **Prerequisites (Depends on)**: `metric_spaces`, `bias_variance_tradeoff`, `feature_scaling_norm`
+- **Leads to (Used in)**: `imbalanced_learning_smote`
+- **Topological Study Path (Kahn Sort)**: `convex_optimization` -> `prob_theory` -> `linear_algebra_spectral` -> `statistical_learning_theory` -> `target_variable` -> `feature_space` -> `metric_spaces` -> `loss_functions_mle` -> `feature_scaling_norm` -> `bias_variance_tradeoff` -> `knn_algorithm`
+- **Interactive Simulator**: Métricas de Distância e Votação Espacial (`knn_spatial`)
+- **Canonical References**: Duda: Cap. 4.5; Hastie: Cap. 13.3
+- **Implementation (scikit-learn - executable_example)**:
+```scikit-learn
+from sklearn.neighbors import KNeighborsClassifier
+knn = KNeighborsClassifier(n_neighbors=5, metric="euclidean")
+knn.fit(X_tr, y_tr)
+```
+
+---
+
+### `roc_auc_curves`: Curvas ROC e Precision-Recall (AUC-ROC) [Level 4 | Domain: academic_ml | metrics]
+- **Discipline Area**: Aprendizagem Computacional
+- **Summary**: Taxa de Verdadeiros Positivos (TPR) vs Taxa de Falsos Positivos (FPR) sob variação do limiar.
+- **Rigorous Definition**: Avalia o poder discriminativo do classificador independentemente de um limiar de corte fixo. A Área Sob a Curva ROC (AUC-ROC) representa a probabilidade de um positivo aleatório receber uma pontuação superior a um negativo.
+- **Mathematical Formula**: `$\text{TPR} = \frac{TP}{TP+FN}, \quad \text{FPR} = \frac{FP}{FP+TN}, \quad \text{AUC} = \int_0^1 \text{TPR}(f) df$`
+- **Prerequisites (Depends on)**: `confusion_matrix_metrics`
+- **Leads to (Used in)**: None (Terminal Application)
+- **Topological Study Path (Kahn Sort)**: `prob_theory` -> `linear_algebra_spectral` -> `target_variable` -> `feature_space` -> `dataset_split_leakage` -> `confusion_matrix_metrics` -> `roc_auc_curves`
+- **Canonical References**: Flach: Cap. 2.3; Hastie: Cap. 9.2.4; Gama: Cap. 7
+- **Implementation (scikit-learn - executable_example)**:
+```scikit-learn
+from sklearn.metrics import roc_auc_score, roc_curve
+auc = roc_auc_score(y_test, y_probs)
+```
+
+---
+
+### `imbalanced_learning_smote`: Dados Desbalanceados & Técnica SMOTE [Level 5 | Domain: academic_ml | complementary]
+- **Discipline Area**: Aprendizagem Computacional
+- **Summary**: Synthetic Minority Over-sampling Technique e reponderação de classes (Class Weights).
+- **Rigorous Definition**: Quando uma classe é rara (ex: 1% fraudes), o classificador ignora a minoria mantendo alta accurácia aparente. O SMOTE sintetiza novos exemplos conectando instâncias minoritárias aos seus k vizinhos mais próximos no espaço vetorial.
+- **Mathematical Formula**: `$\mathbf{x}_{\text{novo}} = \mathbf{x}_i + \lambda (\mathbf{x}_{zi} - \mathbf{x}_i), \quad \lambda \in [0, 1]$`
+- **Prerequisites (Depends on)**: `knn_algorithm`, `confusion_matrix_metrics`
+- **Leads to (Used in)**: None (Terminal Application)
+- **Topological Study Path (Kahn Sort)**: `prob_theory` -> `convex_optimization` -> `linear_algebra_spectral` -> `target_variable` -> `statistical_learning_theory` -> `feature_space` -> `metric_spaces` -> `loss_functions_mle` -> `dataset_split_leakage` -> `feature_scaling_norm` -> `bias_variance_tradeoff` -> `confusion_matrix_metrics` -> `knn_algorithm` -> `imbalanced_learning_smote`
+- **Canonical References**: Chawla et al. (2002); Müller & Guido: Cap. 6
+- **Implementation (python - executable_example)**:
+```python
+from imblearn.over_sampling import SMOTE
+X_res, y_res = SMOTE(k_neighbors=5).fit_resample(X, y)
+```
+
+---
+
+### `universal_approximation`: Teorema da Aproximação Universal (Cybenko & Hornik) [Level 5 | Domain: academic_ml | connectionist]
+- **Discipline Area**: Aprendizagem Computacional
+- **Summary**: Uma rede com uma única camada oculta suficiente pode aproximar qualquer função contínua em compactos de R^n.
+- **Rigorous Definition**: Teorema de Cybenko (1989) e Hornik (1991): Seja K um subconjunto compacto de R^d e sigma uma função de ativação contínua e não-polinomial. Qualquer função contínua f em C(K) pode ser arbitrariamente bem aproximada por uma rede neuronal feedforward com uma única camada oculta de dimensão finita. (Nota epistemológica: é um teorema de existência matemática; a convergência empírica por descida de gradiente é um problema computacional distinto).
+- **Mathematical Formula**: `$F(x) = \sum_{i=1}^N v_i \sigma(w_i^T x + b_i) \implies \sup_{x \in K} |F(x) - f(x)| < \epsilon$`
+- **Prerequisites (Depends on)**: `backpropagation_algorithm`
+- **Leads to (Used in)**: None (Terminal Application)
+- **Topological Study Path (Kahn Sort)**: `convex_optimization` -> `linear_algebra_spectral` -> `perceptron_rosenblatt` -> `mlp_neural_networks` -> `activation_functions` -> `backpropagation_algorithm` -> `universal_approximation`
+- **Canonical References**: Bishop: Cap. 5.1; Cybenko (1989); Hornik (1991)
+- **Implementation (python - illustrative_snippet)**:
+```python
+# Demonstração matemática de expressividade formal de redes neuronais
+```
+
+---
